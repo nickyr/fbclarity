@@ -1,0 +1,188 @@
+\relax 
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\citation{openidsecurity}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\citation{fbpermsinstructions}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Examples of messages presented to the user. From left: Read permissions message from Yahoo.com, write permissions message from Pinterest.com, and extended permissions message from AddThis.com.\relax }}{2}{figure.1}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{figure:messageexample}{{1}{2}{Examples of messages presented to the user. From left: Read permissions message from Yahoo.com, write permissions message from Pinterest.com, and extended permissions message from AddThis.com.\relax \relax }{figure.1}{}}
+\citation{fbexample}
+\citation{devildetails}
+\citation{chaabane}
+\citation{appinspect}
+\citation{miningpermissions}
+\citation{irishaudit}
+\citation{ssoperspective}
+\citation{egelman}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related research}{3}{section.2}}
+\newlabel{sec:research}{{2}{3}{Related research\relax }{section.2}{}}
+\citation{fbdocs}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Which permissions does Facebook actually give?}{4}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Methodology}{4}{subsection.3.1}}
+\citation{appinspect}
+\citation{alexa}
+\citation{fbpermsinstructions}
+\citation{fbpermissions}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Getting data from real sites}{5}{subsubsection.3.1.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}How developers request permissions}{5}{subsection.3.2}}
+\citation{fbpermsinstructions}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The URL for the first message presented to the user when logging in to Timecrunch.me. The scope and permissions are colored red. The permissions being requested are \emph  {email}, \emph  {create\_event}, \emph  {offline\_access} (deprecated), \emph  {user\_groups}, \emph  {friends\_groups}, and \emph  {publish\_stream}. (`\%2C' represents a comma.)\relax }}{6}{figure.2}}
+\newlabel{figure:scopeinurl}{{2}{6}{The URL for the first message presented to the user when logging in to Timecrunch.me. The scope and permissions are colored red. The permissions being requested are \emph {email}, \emph {create\_event}, \emph {offline\_access} (deprecated), \emph {user\_groups}, \emph {friends\_groups}, and \emph {publish\_stream}. (`\%2C' represents a comma.)\relax \relax }{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}How Facebook creates the permissions request}{6}{subsection.3.3}}
+\citation{fbexample}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Identifying the actual permissions being requested}{7}{subsubsection.3.3.1}}
+\newlabel{sec:inputels}{{3.3.1}{7}{Identifying the actual permissions being requested\relax }{subsubsection.3.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces From top: The \emph  {read}, \emph  {write}, and \emph  {extended} input elements from the HTML for the first message presented to the user when logging in to Timecrunch.me. Permissions are colored red. \emph  {private} is not actually a permission, but always appears in the \emph  {read} element. \emph  {offline\_access} does not appear since it is deprecated. If a site did not have any permissions of one type, that element's value would be empty.\relax }}{7}{figure.3}}
+\newlabel{figure:inputels}{{3}{7}{From top: The \emph {read}, \emph {write}, and \emph {extended} input elements from the HTML for the first message presented to the user when logging in to Timecrunch.me. Permissions are colored red. \emph {private} is not actually a permission, but always appears in the \emph {read} element. \emph {offline\_access} does not appear since it is deprecated. If a site did not have any permissions of one type, that element's value would be empty.\relax \relax }{figure.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Differences from what the developer requested}{8}{subsubsection.3.3.2}}
+\newlabel{sec:developerdiffs}{{3.3.2}{8}{Differences from what the developer requested\relax }{subsubsection.3.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Permissions granted in groups.\relax }}{8}{table.caption.1}}
+\newlabel{table:permgroups}{{1}{8}{Permissions granted in groups.\relax \relax }{table.caption.1}{}}
+\citation{fbpermissions}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Number of occurrences in the scope and in the HTML for permissions granted in groups. Those in the scope were requested by developers, those in the HTML would actually be given if approved by the user. The lines on the left designate the groups as listed in Table\nobreakspace  {}\ref  {table:permgroups}.\relax }}{9}{figure.4}}
+\newlabel{figure:scopevshtml}{{4}{9}{Number of occurrences in the scope and in the HTML for permissions granted in groups. Those in the scope were requested by developers, those in the HTML would actually be given if approved by the user. The lines on the left designate the groups as listed in Table~\ref {table:permgroups}.\relax \relax }{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}How permissions are presented to the user}{9}{subsection.3.4}}
+\newlabel{sec:messages}{{3.4}{9}{How permissions are presented to the user\relax }{subsection.3.4}{}}
+\citation{fbpermissions}
+\citation{fbpermissions}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Discussion}{10}{subsection.3.5}}
+\newlabel{sec:investigationdiscussion}{{3.5}{10}{Discussion\relax }{subsection.3.5}{}}
+\citation{fbpermsinstructions}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix\nobreakspace  {}\ref  {appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure\nobreakspace  {}\ref  {figure:messageexample} for an example.   \relax \fontsize  {10}{12}\selectfont  \abovedisplayskip 10\p@ plus2\p@ minus5\p@ \abovedisplayshortskip \z@ plus3\p@ \belowdisplayshortskip 6\p@ plus3\p@ minus3\p@ \def \leftmargin \leftmargini \parsep 5\p@ plus2.5\p@ minus\p@ \topsep 10\p@ plus4\p@ minus6\p@ \itemsep 5\p@ plus2.5\p@ minus\p@ {\leftmargin \leftmargini \topsep 6\p@ plus2\p@ minus2\p@ \parsep 3\p@ plus2\p@ minus\p@ \itemsep \parsep }\belowdisplayskip \abovedisplayskip *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure\nobreakspace  {}\ref  {figure:messageexample}.\relax }}{11}{table.caption.2}}
+\newlabel{table:messagegrouped}{{2}{11}{Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix~\ref {appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref {figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref {figure:messageexample}.\relax \relax }{table.caption.2}{}}
+\citation{fbpermissions}
+\citation{publishperms}
+\citation{clarity}
+\citation{fbapi}
+\citation{fbsecurity}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Facebook's response}{12}{subsection.3.6}}
+\newlabel{sec:fbresponse}{{3.6}{12}{Facebook's response\relax }{subsection.3.6}{}}
+\citation{egelman}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Users' understanding of permissions}{13}{section.4}}
+\newlabel{sec:understanding}{{4}{13}{Users' understanding of permissions\relax }{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Methodology}{13}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Pilots}{14}{subsubsection.4.1.1}}
+\citation{fbpermissions}
+\citation{fbprivacyfaq}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.2}Final survey}{15}{subsubsection.4.1.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.3}Additional survey for read permissions}{15}{subsubsection.4.1.3}}
+\newlabel{sec:additionalsurvey}{{4.1.3}{15}{Additional survey for read permissions\relax }{subsubsection.4.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Analysis of survey results}{16}{subsection.4.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Read permissions}{16}{subsubsection.4.2.1}}
+\citation{egelman}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Percentage of people who correctly identified that each permission would be given to the site upon authorization.\relax }}{17}{figure.5}}
+\newlabel{figure:readpercents}{{5}{17}{Percentage of people who correctly identified that each permission would be given to the site upon authorization.\relax \relax }{figure.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces \emph  {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked.\relax }}{17}{table.caption.3}}
+\newlabel{table:readstats}{{3}{17}{\emph {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked.\relax \relax }{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Write permissions}{18}{subsubsection.4.2.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Percentage of people who correctly identified that each permission would be given to the site upon authorization.\relax }}{19}{figure.6}}
+\newlabel{figure:writepercents}{{6}{19}{Percentage of people who correctly identified that each permission would be given to the site upon authorization.\relax \relax }{figure.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces \emph  {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked. N = 301.\relax }}{19}{table.caption.4}}
+\newlabel{table:writestats}{{4}{19}{\emph {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked. N = 301.\relax \relax }{table.caption.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Comparison}{19}{subsubsection.4.2.3}}
+\citation{egelman}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Additional read permissions survey}{20}{subsubsection.4.2.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Percentage of people who correctly identified that Imgur.com would be able to see their photo albums of each privacy level upon authorization.\relax }}{20}{figure.7}}
+\newlabel{figure:privacypercents}{{7}{20}{Percentage of people who correctly identified that Imgur.com would be able to see their photo albums of each privacy level upon authorization.\relax \relax }{figure.7}{}}
+\citation{publishperms}
+\citation{fbpolicy}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces \emph  {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to an expected value of half the total number of people asked. N = 99.\relax }}{21}{table.caption.5}}
+\newlabel{table:privacystats}{{5}{21}{\emph {p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to an expected value of half the total number of people asked. N = 99.\relax \relax }{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Discussion}{21}{subsection.4.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Limitations}{21}{subsubsection.4.3.1}}
+\newlabel{sec:limitations}{{4.3.1}{21}{Limitations\relax }{subsubsection.4.3.1}{}}
+\citation{mturkreliability}
+\citation{twitterdocs}
+\citation{googledocs}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Comparison to other SSO implementations}{22}{section.5}}
+\citation{writeseparate}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission they request is \emph  {publish\_actions}.\relax }}{23}{table.caption.6}}
+\newlabel{table:oldmessages}{{6}{23}{Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission they request is \emph {publish\_actions}.\relax \relax }{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Future areas for research}{23}{section.6}}
+\citation{egelman}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{24}{section.7}}
+\citation{newlogin}
+\citation{appinspect}
+\citation{bstctl:etal}
+\citation{bstctl:nodash}
+\citation{bstctl:simpurl}
+\bibstyle{IEEEtranS}
+\bibdata{report_references}
+\bibcite{fbsecurity}{1}
+\bibcite{alexa}{2}
+\bibcite{chaabane}{3}
+\bibcite{publishperms}{4}
+\bibcite{writeseparate}{5}
+\bibcite{egelman}{6}
+\bibcite{fbdocs}{7}
+\bibcite{fbexample}{8}
+\bibcite{fbapi}{9}
+\bibcite{fbpermissions}{10}
+\bibcite{fbpermsinstructions}{11}
+\bibcite{fbpolicy}{12}
+\bibcite{newlogin}{13}
+\bibcite{fbprivacyfaq}{14}
+\bibcite{miningpermissions}{15}
+\bibcite{mturkreliability}{16}
+\bibcite{googledocs}{17}
+\bibcite{appinspect}{18}
+\bibcite{irishaudit}{19}
+\bibcite{openidsecurity}{20}
+\bibcite{devildetails}{21}
+\bibcite{ssoperspective}{22}
+\bibcite{twitterdocs}{23}
+\bibcite{clarity}{24}
+\citation{fbpermissions}
+\citation{fbpermissions}
+\citation{fbpermissions}
+\citation{fbpermissions}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full message decoding tables}{26}{appendix.A}}
+\newlabel{appendix:decodetables}{{A}{26}{Full message decoding tables\relax }{appendix.A}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7a}{\ignorespaces Read permission message decoder, part (a). Message begins with \textit  {``Site\_Name will receive the following info\IeC {\textellipsis }''} See Figure\nobreakspace  {}\ref  {figure:messageexample} (left image) for an example.\relax }}{27}{table.caption.7}}
+\newlabel{first}{{7a}{27}{Read permission message decoder, part (a). Message begins with \textit {``Site\_Name will receive the following info…''} See Figure~\ref {figure:messageexample} (left image) for an example.\relax \relax }{table.caption.7}{}}
+\newlabel{table:messagesr1}{{7a}{27}{Read permission message decoder, part (a). Message begins with \textit {``Site\_Name will receive the following info…''} See Figure~\ref {figure:messageexample} (left image) for an example.\relax \relax }{table.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7b}{\ignorespaces  Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit  {``...and your friends'\IeC {\textellipsis }''} See Figure\nobreakspace  {}\ref  {figure:messageexample} (left image) for an example.\relax }}{28}{table.caption.8}}
+\newlabel{second}{{7b}{28}{Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit {``...and your friends'…''} See Figure~\ref {figure:messageexample} (left image) for an example.\relax \relax }{table.caption.8}{}}
+\newlabel{table:messagesr2}{{7b}{28}{Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit {``...and your friends'…''} See Figure~\ref {figure:messageexample} (left image) for an example.\relax \relax }{table.caption.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Write permission message decoder. See Figure\nobreakspace  {}\ref  {figure:messageexample} (middle image) for an example. Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure\nobreakspace  {}\ref  {figure:messageexample}.\relax }}{29}{table.caption.9}}
+\newlabel{table:messagesw}{{8}{29}{Write permission message decoder. See Figure~\ref {figure:messageexample} (middle image) for an example. Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref {figure:messageexample}.\relax \relax }{table.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Extended permission message decoder. Message begins with \textit  {``Site\_Name would like to\IeC {\textellipsis }''} See Figure\nobreakspace  {}\ref  {figure:messageexample} (right image) for an example.\relax }}{29}{table.caption.10}}
+\newlabel{table:messagese}{{9}{29}{Extended permission message decoder. Message begins with \textit {``Site\_Name would like to…''} See Figure~\ref {figure:messageexample} (right image) for an example.\relax \relax }{table.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Surveys}{30}{appendix.B}}
+\newlabel{appendix:surveys}{{B}{30}{Surveys\relax }{appendix.B}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Initial question}{30}{subsection.B.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Read permissions surveys}{30}{subsection.B.2}}
+\newlabel{appendix:readsurveys}{{B.2}{30}{Read permissions surveys\relax }{subsection.B.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from TripAdvisor.com.\relax }}{31}{figure.8}}
+\newlabel{figure:61r}{{8}{31}{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from TripAdvisor.com.\relax \relax }{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Splashscore.com.\relax }}{32}{figure.9}}
+\newlabel{figure:62r}{{9}{32}{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Splashscore.com.\relax \relax }{figure.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Jabong.com.\relax }}{33}{figure.10}}
+\newlabel{figure:63r}{{10}{33}{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Jabong.com.\relax \relax }{figure.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Flickr.com.\relax }}{34}{figure.11}}
+\newlabel{figure:64r}{{11}{34}{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Flickr.com.\relax \relax }{figure.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Write permissions surveys}{35}{subsection.B.3}}
+\newlabel{appendix:writesurveys}{{B.3}{35}{Write permissions surveys\relax }{subsection.B.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces A write permissions survey. The correct answers are selected.\relax }}{35}{figure.12}}
+\newlabel{figure:61w}{{12}{35}{A write permissions survey. The correct answers are selected.\relax \relax }{figure.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Additional read permissions survey}{35}{subsection.B.4}}
+\newlabel{appendix:readsurvey2}{{B.4}{35}{Additional read permissions survey\relax }{subsection.B.4}{}}
+\citation{fbsecurity}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The additional read permissions survey. The correct answers are selected.\relax }}{36}{figure.13}}
+\newlabel{figure:71r}{{13}{36}{The additional read permissions survey. The correct answers are selected.\relax \relax }{figure.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Correspondence with Facebook Security}{36}{appendix.C}}
+\newlabel{appendix:correspondence}{{C}{36}{Correspondence with Facebook Security\relax }{appendix.C}{}}
