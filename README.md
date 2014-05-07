@@ -1,5 +1,7 @@
 The report is "report.tex" 
+
 The bibliography is "report_references.bib"
+
 Lots of styles in "jpaper.cls" <-- they gave us this file, I've only modified it slightly
 
 To compile:
