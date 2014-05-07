@@ -4,10 +4,6 @@
 %
 % ---- Start of 'updates'  ----
 %
-% Updated 10pt version to conform to advertised formatting requirements
-% (leading 11.9pt -> 12.0pt, textheight 660pt -> 666pt) - Dec 9 2009
-% Geoff Voelker
-%
 % Changes made to enable easier reviewing by fixing font size to 10pt - Jan. 3th. 2007
 % Anja Feldmann
 %
@@ -133,7 +129,7 @@
 \headheight 12pt                % Height of box containing running head.
 \headsep 25pt                   % Space between running head and text.
 
-\textheight 666pt       % 9 1/4 column height
+\textheight 660pt       % 9 1/4 column height
 \textwidth 42pc         % Width of text line.
                         % For two-column mode:
 \columnsep 2pc          %    Space between columns
@@ -635,7 +631,7 @@
   \renewcommand{\@ptsize}{}
   \renewcommand{\normalsize}{%
 %    \@setfontsize\normalsize\@ixpt{10.5\p@}%\ninept%
-    \@setfontsize\normalsize\@xpt{12\p@}%\tenpt% %% Adjusted for 10pt
+    \@setfontsize\normalsize\@xpt{11.9\p@}%\tenpt% %% Adjusted for 10pt
     \abovedisplayskip 6\p@ \@plus2\p@ \@minus\p@
     \belowdisplayskip \abovedisplayskip
     \abovedisplayshortskip 6\p@ \@minus 3\p@
@@ -644,8 +640,7 @@
   }
 \else
   \def\@normalsize{%changed next to 9 from 10 %% Adjusted for 10pt
-%    \@setsize\normalsize{10\p@}\ixpt\@ixpt
-    \@setsize\normalsize{10\p@}\xpt\@xpt %% Adjusted for 10pt
+    \@setsize\normalsize{10\p@}\ixpt\@ixpt
    \abovedisplayskip 6\p@ \@plus2\p@ \@minus\p@
     \belowdisplayskip \abovedisplayskip
     \abovedisplayshortskip 6\p@ \@minus 3\p@
