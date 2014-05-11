@@ -6,8 +6,9 @@
 \usepackage{float}
 \usepackage{subfloat}
 \usepackage{caption}
+\usepackage{placeins}
 
-\begin{document}
+\begin{document}\sloppy
 
 %replace XXX with the submission number you are given from the ISCA submission site.
 \conferenceinfo{COSN}{2014 Dublin, Ireland}
@@ -46,12 +47,12 @@ Facebook Connect does more than just allow a user to sign in: sites can request 
 
 When a user logs in to a website using Facebook Connect, they are presented with up to three dialogues asking them to authorize the website to receive the desired permissions. The first message corresponds to the \emph{read} permissions, permissions that allow the site to see information on the user's profile. The second corresponds to the \emph{write} permissions, which allow the site to post various things on the user's profile. The third (or second, if no write permissions were requested) corresponds to the \emph{extended} permissions. These permissions are for more sensitive things, such as sending the user text messages and marking their notifications as read. The user can refuse to grant write and extended permissions and still log in.\footnote{The documentation \cite{fbpermsinstructions} provides more details about these groups, although it breaks them down into six different groups.} If the user approves these permissions, they are logged in to the site and the site receives their information from Facebook. Figure~\ref{figure:messageexample} shows examples of messages asking the user to authorize permissions.
 
-\begin{figure}[h!]
+\begin{figure*}[htbp]
   \centering
   \includegraphics[width=16.5cm]{message_example}
   \caption{Examples of messages presented to the user. From left: Read permissions message from Yahoo.com, write permissions message from Pinterest.com, and extended permissions message from AddThis.com.}
   \label{figure:messageexample}
-\end{figure}
+\end{figure*}
 
 Users logging in with Facebook Connect place a lot of trust in Facebook to only share information that the user authorizes. This relies not only on Facebook granting only the permissions presented in the authorization messages but also on users correctly interpreting these messages. We will explore both in this paper and show that:
 
@@ -61,6 +62,7 @@ Users logging in with Facebook Connect place a lot of trust in Facebook to only 
   \item Users generally understand which read permissions are being requested when they log in, although many think that they are only giving access to data marked as public.
   \item Users do not understand the variety of write permissions sites will receive upon authorization.
 \end{itemize}
+
 
 \section{Related research}
 \label{sec:research}
@@ -108,12 +110,15 @@ The first step in the permissions presentation process as we outlined it above i
 
 The value of the scope is visible in the URL of the page where the user is asked to approve the read permissions, after the string ``scope='' (see Figure~\ref{figure:scopeinurl}). We confirmed using the test site that the values that show up in the URL are indeed the exact ones the developer puts in the site's scope parameter. When crawling the sites, we parsed the URLs to extract the permissions requested by developers.
 
+\floatstyle{boxed}
+\restylefloat{figure}
 \begin{figure}[h!]
-  {\fontfamily{phv}\selectfont https://www.facebook.com/dialog/oauth?app\_id=138615416238413\&client\_id=138615416238413\&display=\\popup\&domain=www.timecrunch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\%3A\%2F\\\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df1\\7cdd7f881aff\%26domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%252Fwww.timecrunch\\.me\%252Ff2dc123d3ff5394\%26relation\%3Dopener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\\\%2Csigned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2Cuser\_groups\%2Cfriends\_group\\s\%2Cpublish\_stream}\&sdk=joey}
+  {\small{\fontfamily{phv}\selectfont https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\\&client\_id=138615416238413\&display=popup\&domain=www.timecr\\unch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\\\%3A\%2F\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2\\F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df17cdd7f881aff\%26\\domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%\\252Fwww.timecrunch.me\%252Ff2dc123d3ff5394\%26relation\%3Do\\pener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\%2Csi\\gned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2\\Cuser\_groups\%2Cfriends\_groups\%2Cpublish\_stream}\&sdk=joey}}
   \caption{The URL for the first message presented to the user when logging in to Timecrunch.me. The scope and permissions are colored red. The permissions being requested are \emph{email}, \emph{create\_event}, \emph{offline\_access} (deprecated), \emph{user\_groups}, \emph{friends\_groups}, and \emph{publish\_stream}. (`\%2C' represents a comma.)}
   \label{figure:scopeinurl}
 \end{figure}
-
+\floatstyle{plain}
+\restylefloat{figure}
 \subsection{How Facebook creates the permissions request}
 
 In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
@@ -133,13 +138,13 @@ The first page presented to the user when asking them to approve permissions has
   \begin{tabular}{l}
      
     {\scriptsize\fontfamily{pcr}\selectfont 
-      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=``{\color{blue}read}''}}\hbox{value=``{\color{darkred}email,user\_groups,friends\_groups,public\_profile,user\_friends,private}'' />}}
+      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=}}\hbox{\strut{``{\color{blue}read}'' value=``{\color{darkred}email,user\_groups,friends\_groups,}}}\hbox{\strut{{\color{darkred}public\_profile,user\_friends,private}'' />}}}
     }\\
     {\scriptsize\fontfamily{pcr}\selectfont 
-      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=``{\color{blue}write}''}}\hbox{\strut{value=``{\color{darkred}publish\_stream,publish\_actions,create\_note,photo\_upload,publish\_checkins,}}}\hbox{\strut{{\color{darkred}share\_item,status\_update,video\_upload}'' />}}}
+      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=}}\hbox{\strut{``{\color{blue}write}'' value=``{\color{darkred}publish\_stream,publish\_actions,}}}\hbox{\strut{{\color{darkred}create\_note,photo\_upload,publish\_checkins,share\_item,}}}\hbox{\strut{{\color{darkred}status\_update,video\_upload}'' />}}}
     }\\
     {\scriptsize\fontfamily{pcr}\selectfont 
-      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=``{\color{blue}extended}''}}\hbox{value=``{\color{darkred}create\_event,rsvp\_event}'' />}}
+      \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=}}\hbox{\strut{``{\color{blue}extended}'' value=``{\color{darkred}create\_event,rsvp\_event}'' />}}}
     } \\ 
      \\
   \end{tabular}
@@ -178,8 +183,9 @@ Through experimentation with our test site, we determined that several permissio
     \textbf{Write Permissions}\\
     \hline
     \hline
-    \vtop{\hbox{\strut{\emph{create\_note}, \emph{upload\_photos}, \emph{upload\_videos}, \emph{publish\_actions},}}
-      \hbox{\strut{\emph{publish\_checkins}, \emph{publish\_stream}, \emph{share\_item}, \emph{status\_update}}}}\\
+    \vtop{\hbox{\strut{\emph{create\_note}, \emph{upload\_photos}, \emph{upload\_videos},}}
+      \hbox{\strut{\emph{publish\_actions}, \emph{publish\_checkins}, \emph{publish\_stream},}}
+      \hbox{\strut{\emph{share\_item}, \emph{status\_update}}}}\\
     \hline
     \hline
     \textbf{Extended Permissions}\\
@@ -198,7 +204,7 @@ When we crawled the logins of the real sites, we recorded all of the permissions
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{scope_vs_html}
+  \includegraphics[width=8.5cm]{scope_vs_html_cosn}
   \caption{Number of occurrences in the scope and in the HTML for permissions granted in groups. Those in the scope were requested by developers, those in the HTML would actually be given if approved by the user. The lines on the left designate the groups as listed in Table~\ref{table:permgroups}.}
   \label{figure:scopevshtml}
 \end{figure}
@@ -210,7 +216,7 @@ When we crawled the logins of the real sites, we recorded all of the permissions
 
 As mentioned previously, when the user logs in to a site with Facebook Connect they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions. These messages are algorithmically formed from the permissions present in the corresponding HTML input elements. We identified the phrase or word in the message that corresponds to each permission with our test site and verified the correspondences with the data from the 177 real sites. Most messages appear reasonably clear. However, the permissions that are always presented in groups (see Table~\ref{table:permgroups}) have one corresponding word or phrase in the message indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages, the corresponding groups of permissions being requested, and the meaning of the permissions according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
 
-\begin{table}[h!]
+\begin{table*}[htbp]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -242,7 +248,7 @@ As mentioned previously, when the user logs in to a site with Facebook Connect t
   \end{tabular}
   \caption{Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagegrouped}
-\end{table}
+\end{table*}
 
 \subsection{Discussion}
 \label{sec:investigationdiscussion}
@@ -298,16 +304,23 @@ Respondents were then presented with one of the following three question types:
 
 The free response question would be the ideal way to test user understanding because the other two options prompt the user with ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answer. (While this may be representative of how much users pay attention to messages when they log in to sites, it is not useful for this survey.) There was no noticeable difference in responses between the yes or no questions and the multiple-selection questions, so we chose the multiple-selection format to get results about more permissions.
 
-We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people were more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. However, since the point of this survey was not to test how the specific site influenced what permissions people thought were being given, the final survey used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}.
+We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. In order to separate our manipulated variables and provide a direct comparison between results, our primary survey used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. We performed a separate survey to test write permission comprehension with different sites, described in Section~\ref{sec:multisite}.
 
-\subsubsection{Final survey}
+\subsubsection{Read versus write permissions survey}
 
-The final survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey to avoid confusion that may have arisen due to only seeing the login dialogues out of context.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}.
+The final version of the survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey to avoid confusion that may have arisen due to only seeing the login dialogues out of context.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}.
 
 The other half were presented with read permissions questions. Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}). All were renamed ``Hooli.com'' Each message was followed with eight or nine options for things the site might be able to do. Four or five options were information on a Facebook profile that the site would be able to see. The other four were either things the site could not see or were write or extended permissions.\footnote{It is difficult to determine what the site cannot see since the user's public profile could contain a lot of information if they have relaxed privacy settings, so only very clear-cut things like seeing private messages could be used.} Again, the incorrect answers were only so the respondent did not have to select all options to be correct. The four different questions can be seen in Appendix~\ref{appendix:readsurveys}. There are too many different read permissions to effectively test them all without exhausting the respondents with too many questions, so the ones tested are some of the more common ones.
 
-\subsubsection{Additional survey for read permissions}
-\label{sec:additionalsurvey}
+\subsubsection{Write permissions survey with different sites}
+\label{sec:multisite}
+
+As previously mentioned, our pilot surveys indicated that the site identity may influence how people interpret the write permissions message. We performed a separate survey with 300 Mechanical Turk workers to test this. The format of the survey was identical to the write permissions questions in the first survey and we provided the same options for the user to select. However, instead of using ``Hooli.com'' as the website in question, one third of respondents were presented with \emph{Flickr.com} (a photo and video sharing site), one third with \emph{TripAdvisor.com} (a travel site), and one third with \emph{iFlikeU.com} (an anonymous messaging site). (Since there is only one write permissions message, the message presented to the user in all cases was identical aside from the site name and description.)
+
+The results of this survey can be statistically analyzed with a G-test to see if the number of respondents who thought each permission would be granted varied across the four sites (the three mentioned here plus the data from ``Hooli.com'' from the first survey). The null hypothesis is that the site identity does not affect how many people think a given permission is being requested.
+
+\subsubsection{Privacy levels survey}
+\label{sec:privacysurvey}
 
 In one pilot survey of the free response format, a respondent stated that the site would gain access to only a limited number of permissions because their Facebook settings prevented them from accessing the rest. This suggests a lack of understanding of how the read permissions work: A site can access nearly everything that is public with only the \emph{public\_profile} permission \cite{fbprivacyfaq}. By granting the site additional permissions, a user is giving the site permission to access that information regardless of the user's privacy settings. (Using the test site, we confirmed that we could see all user photo albums regardless of their privacy settings with the \emph{user\_photos} permission.)
 
@@ -325,7 +338,7 @@ Figure~\ref{figure:readpercents} illustrates the percentage of people who correc
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{read_percents}
+  \includegraphics[width=8.5cm]{read_percents_cosn}
   \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization.}
   \label{figure:readpercents}
 \end{figure}
@@ -334,22 +347,22 @@ Figure~\ref{figure:readpercents} illustrates the percentage of people who correc
   \centering
   \begin{tabular}{|l|l|l|l|}
     \hline
-    \textbf{Permission}            & \textbf{N}      & \textbf{Percent Correct} & \textbf{2-tailed \emph{p}-value}                 \\ \hline \hline
-    see the cities your friends live in & 78 & 80.77                                 & 0.000         \\ \hline
+    \textbf{Permission}            & \textbf{N}      & \begin{tabular}[c]{@{}l@{}}\textbf{Percent}\\\textbf{Correct}\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{2-tailed} \\\textbf{\emph{p}-value}\end{tabular}                 \\ \hline \hline
+    \begin{tabular}[c]{@{}l@{}}see the cities your \\ friends live in \end{tabular}& 78 & 80.77                                 & 0.000         \\ \hline
     see your friends’ photos            & 78 & 76.92                                 & 0.000           \\ \hline
     see what you’ve liked               & 78 & 88.46                                 & 0.000     \\ \hline
     see your status updates             & 150 & 77.33                                 & 0.000       \\ \hline
-    see which city you live in          & 230 & 89.13                                 & 0.000 \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see which city you live\\ in\end{tabular}          & 230 & 89.13                                 & 0.000 \\ \hline
     see your wall                       & 72  & 62.50                                             & 0.044               \\ \hline
     see your gender                     & 72 & 79.17                                 & 0.000          \\ \hline
     see your News Feed                  & 72 & 81.94                                 & 0.000         \\ \hline
-    see who your family members are     & 80 & 67.50                                             & 0.002              \\ \hline
-    see your relationship status        & 80 & 85.00                                            & 0.000       \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see who your family \\members are\end{tabular}     & 80 & 67.50                                             & 0.002              \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see your relationship\\ status\end{tabular}        & 80 & 85.00                                            & 0.000       \\ \hline
     see your exact age                  & 159 & 71.70                                 & 0.000         \\ \hline
-    see where you’ve previously worked  & 80 & 83.75                                            & 0.000       \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see where you've \\previously worked\end{tabular}  & 80 & 83.75                                            & 0.000       \\ \hline
     see who your friends are            & 79 & 84.81                                 & 0.000       \\ \hline
-    see what language you speak         & 79 & 63.29                                 & 0.024               \\ \hline
-    see what country you live in        & 79 & 65.82                                 & 0.007              \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see what language you\\ speak\end{tabular}         & 79 & 63.29                                 & 0.024               \\ \hline
+    \begin{tabular}[c]{@{}l@{}}see what country you\\ live in\end{tabular}        & 79 & 65.82                                 & 0.007              \\ \hline
   \end{tabular}
   \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked.} % should I be putting numbers in this table instead of %?
   \label{table:readstats}
@@ -367,7 +380,7 @@ Figure~\ref{figure:writepercents} illustrates the percentage of people who corre
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{write_percents}
+  \includegraphics[width=8.5cm]{write_percents_cosn}
   \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization.}
   \label{figure:writepercents}
 \end{figure}
@@ -376,9 +389,9 @@ Figure~\ref{figure:writepercents} illustrates the percentage of people who corre
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
-    \textbf{Permission}              & \textbf{Percent Correct} & \textbf{2-tailed \emph{p}-value}  \\ \hline \hline
+    \textbf{Permission}              & \begin{tabular}[c]{@{}l@{}}\textbf{Percent}\\\textbf{Correct}\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{2-tailed}\\ \textbf{\emph{p}-value}\end{tabular}  \\ \hline \hline
     update your status               & 34.88         & 0.000                                                         \\ \hline
-    publish app activity to Facebook & 45.85         & 0.166                                                                \\ \hline
+    \begin{tabular}[c]{@{}l@{}}publish app activity to \\ Facebook\end{tabular} & 45.85         & 0.166                                                                \\ \hline
     add and modify photos            & 8.64         & 0.000           \\ \hline
     add and modify videos            & 8.97         & 0.000            \\ \hline
     publish checkins at locations    & 12.62          & 0.000                      \\ \hline
@@ -404,15 +417,51 @@ It is evident at this point that users understand read permissions messages sign
 
 We assigned a ranking to each respondent based on the percentage of permissions they correctly identified\footnote{This counts only the real permissions that will actually be granted and not the incorrect options since we made those up.} and separated them into two groups, one for those asked about read permissions and one for those asked about write permissions.  A Mann-Whitney U test of these two groups allows us to reject the null hypothesis that respondents’ ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing with $p < 0.001$.
 
-\subsubsection{Additional read permissions survey}
+\subsubsection{Write permissions with different sites}
 
-Our first survey indicates that read permissions are understood decently well. However, the additional survey testing whether people understand that they are giving permission to view things that are not marked as ``public'' (see Section~\ref{sec:additionalsurvey}) suggests that they do not understand this aspect.
+Figure~\ref{figure:multipercents} illustrates the percentage of people who correctly identified that each permission would be given to each site after they clicked okay. Table~\ref{table:multistats} lists the numerical percentages as well as the \emph{p}-values from a G-test comparing the variation in number of correct selections for each permission across all four sites.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=8.5cm]{multi_percents_cosn}
+  \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization for four sites.}
+  \label{figure:multipercents}
+\end{figure}
+
+\begin{table*}[htpb]
+  \centering
+  \begin{tabular}{|l|l|l|l|l|l|}
+    \hline
+    \multirow{2}{*}{\textbf{Permission}} & \multicolumn{4}{l|}{\textbf{Percent Correct}}                                                                                                                                                                                                             & \multirow{2}{*}{\textbf{p-value}} \\ \cline{2-5}
+    & \begin{tabular}[c]{@{}l@{}}Flickr \\ (N = 100)\end{tabular} & \begin{tabular}[c]{@{}l@{}}TripAdvisor \\ (N = 93)\end{tabular} & \begin{tabular}[c]{@{}l@{}}iFlikeU \\ (N = 102)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Hooli \\ (N = 301)\end{tabular} &                                   \\ \hline \hline
+    update your status                   & 34.00                                                          & 20.43                                                           & 24.51                                                        & 34.88                                                      & 0.034                             \\ \hline
+    publish app activity to Facebook     & 64.00                                                          & 51.61                                                           & 35.29                                                        & 45.85                                                      & 0.001                             \\ \hline
+    add and modify photos                & 22.00                                                          & 7.53                                                            & 4.90                                                         & 8.64                                                       & 0.002                             \\ \hline
+    add and modify videos                & 15.00                                                          & 2.15                                                            & 3.92                                                         & 8.97                                                       & 0.008                             \\ \hline
+    publish checkins at locations        & 11.00                                                          & 24.73                                                           & 6.86                                                         & 12.62                                                      & 0.006                             \\ \hline
+    create and modify notes              & 6.00                                                           & 3.23                                                            & 11.76                                                        & 5.65                                                       & 0.188                             \\ \hline
+    share items with others              & 31.00                                                          & 32.26                                                           & 30.39                                                        & 34.88                                                      & 0.872                             \\ \hline
+    publish content to your wall         & 65.00                                                          & 53.76                                                           & 44.12                                                        & 55.81                                                      & 0.042                             \\ \hline
+  \end{tabular}
+  \caption{\emph{p}-values for G-test comparing the number of people who correctly selected each permission across four sites.}
+  \label{table:multistats}
+\end{table*}
+
+For ``publish app activity to Facebook,'' ``add and modify photos,'' ``add and modify videos,'' and ``publish checkins at locations,'' the null hypothesis (that the site identity does not affect how many people think a given permission is being requested) can be rejected with $p < .01$. More respondents thought Flickr would be able to add and modify photos and videos compared to other sites, which is reasonable since it is a photo and video sharing site. Likewise, many more people thought that TripAdvisor would be able to publish checkins at locations---a logical thing for a travel site to do.
+
+The null hypothesis can be rejected for ``update your status'' with $p < .04$ and ``publish content to your wall'' with $p < .05$. It cannot be rejected for ``share items with others'' nor ``create and modify notes'' with a reasonable level of confidence.
+
+It appears that users' perception of the write permissions message is influenced by the site identity for some permissions. This further highlights the vagueness of the message---although it means the same thing for every site, users think it means something different on different sites.
+
+\subsubsection{Privacy levels}
+
+Our first survey indicates that read permissions are understood decently well. However, the additional survey testing whether people understand that they are giving permission to view things that are not marked as ``public'' (see Section~\ref{sec:privacysurvey}) suggests that they do not understand this aspect.
 
 Figure~\ref{figure:privacypercents} illustrates the percentage of people who correctly identified that Imgur.com would be able to see their photo albums with various privacy settings if they clicked okay. Table~\ref{table:privacystats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified that a privacy level was visible to the expected value with random guessing: half of the total number of people who were given the survey.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{privacy_percents}
+  \includegraphics[width=8.5cm]{privacy_percents_cosn}
   \caption{Percentage of people who correctly identified that Imgur.com would be able to see their photo albums of each privacy level upon authorization.}
   \label{figure:privacypercents}
 \end{figure}
@@ -421,10 +470,10 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
-    \textbf{Privacy Setting}              & \textbf{Percent Correct} & \textbf{2-tailed \emph{p}-value}     \\ \hline \hline
-    those marked as visible to the public & 83.84         & 0.000 \\ \hline
-    those marked as visible to friends    & 33.33         & 0.001           \\ \hline
-    those marked as visible to only me    & 22.22         & 0.000      \\ \hline
+    \textbf{Privacy Setting}              & \begin{tabular}[c]{@{}l@{}}\textbf{Percent}\\\textbf{Correct}\end{tabular} & \begin{tabular}[c]{@{}l@{}}\textbf{2-tailed}\\ \textbf{\emph{p}-value}\end{tabular}     \\ \hline \hline
+    \begin{tabular}[c]{@{}l@{}}those marked as visible \\to the public \end{tabular} & 83.84         & 0.000 \\ \hline
+    \begin{tabular}[c]{@{}l@{}}those marked as visible \\to friends\end{tabular}    & 33.33         & 0.001           \\ \hline
+    \begin{tabular}[c]{@{}l@{}}those marked as visible \\to only me\end{tabular}    & 22.22         & 0.000      \\ \hline
   \end{tabular}
   \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to an expected value of half the total number of people asked. N = 99.} 
   \label{table:privacystats}
@@ -436,7 +485,7 @@ For each privacy setting, the null hypothesis (that respondents’ ability to id
 
 Our survey indicates that users' understanding of write permissions messages is significantly worse than their understanding of read permissions messages. As discussed in Sections~\ref{sec:investigationdiscussion} and ~\ref{sec:fbresponse}, Facebook claims that all-or-nothing write permissions are easier for the user to understand. However, the comparison to the very granular read permissions suggests that users understand specific, distinct permissions better.
 
-Facebook has attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' As of the time of this writing, this is no longer in the Facebook policy \cite{fbpolicy}. 
+Facebook has attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site. As of the time of this writing, this is no longer mentioned in the Facebook policy \cite{fbpolicy}. 
 
 \subsubsection{Limitations}
 \label{sec:limitations}
@@ -462,12 +511,12 @@ The write permissions messages in the older implementations were formatted diffe
   \centering
   \begin{tabular}{|l|l|}
     \hline
-    \textbf{Site}      & \textbf{Write Permissions Message}                                                                                                              \\ \hline \hline
-    Starpires.com      & \begin{tabular}[c]{@{}l@{}}This app may post on your behalf, including status updates, photos \\ and more.\end{tabular}                         \\ \hline
-    PioneerLegends.com & \begin{tabular}[c]{@{}l@{}}This app may post on your behalf, including collections you \\ completed, miles you collected and more.\end{tabular} \\ \hline
-    Stratego.com       & \begin{tabular}[c]{@{}l@{}}This app may post on your behalf, including achievements you earned\\  and more.\end{tabular}                        \\ \hline
-    OpenShuffle.com    & \begin{tabular}[c]{@{}l@{}}This app may post on your behalf, including your high scores \\ and more.\end{tabular}                               \\ \hline
-    Fupa.com           & \begin{tabular}[c]{@{}l@{}}This app may post on your behalf, including games you played \\ and more.\end{tabular}                               \\ \hline
+    \textbf{Site}      & \begin{tabular}[c]{@{}l@{}}\textbf{Write Permissions} \\ \textbf{Message}\end{tabular}                                                                                                              \\ \hline \hline
+    Starpires.com      & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including status\\ updates, photos and more.\end{tabular}                         \\ \hline
+    PioneerLegends.com & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including collections\\ you completed, miles you \\collected and more.\end{tabular} \\ \hline
+    Stratego.com       & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including achievements\\ you earned and more.\end{tabular}                        \\ \hline
+    OpenShuffle.com    & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including your high\\ scores and more.\end{tabular}                               \\ \hline
+    Fupa.com           & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including games you\\ played and more.\end{tabular}                               \\ \hline
   \end{tabular}
   \caption{Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission they request is \emph{publish\_actions}.} 
   \label{table:oldmessages}
@@ -478,7 +527,6 @@ The write permissions messages in the older implementations were formatted diffe
 This research could be continued in a variety of directions.
 
 \begin{itemize}
-  \item One could investigate how users' interpretations of the permissions messages are influenced by the site they are logging in to. For example, a user may see the write permissions message on Flickr and think it means the site can upload photos, but someone seeing the same message on Skype may not think Skype can upload photos. 
   \item The results of our survey testing whether users understand that sites are getting access to their information even if it is marked as private (see Figure~\ref{figure:privacypercents}) indicate that there is room for more research in the area. This should be tested with a variety of different permissions. One could also experiment with ways to make it clear to the user that all of their information is being shared, regardless of the privacy settings.
   \item We previously mentioned that our survey included options of things the sites could not actually do so the respondent would not have to select all options to be correct. However, many people selected these fake options. One could research what permissions users think are being requested beyond what is actually being requested. This is an important area of research because people may be unwilling to use the SSO service if they think too many permissions are being given.
   \item It is clear that users do not understand the full range of write permissions being requested. However, Egelman \cite{egelman} determined that users make their decision to use Facebook Connect or not before they see the permissions requested. Egelman only tested read permissions, though. A similar study could see how the presence of write permissions affects users' decisions to use Facebook Connect. It could also test whether explicitly stating what write permissions are being requested and varying the number of write permissions requested affects whether users are willing to use the system.
@@ -502,8 +550,6 @@ On April 30, 2014 Facebook announced an update to their Facebook Login system to
 
 Thanks to Joseph Bonneau for his advice and guidance throughout the research process. Thanks to Arvind Narayanan for introducing me to Joe and starting me on this research path. Thanks to Steven Englehardt, Dillon Reisman, Pete Zimmerman, and Christian Eubank for setting me up with the CITP's web crawling infrastructure. (I would also like to acknowledge Steven for discovering the permissions in the hidden HTML input elements.) Thanks to Markus Huber for providing me with the AppInspect dataset \cite{appinspect}.
 
-\clearpage
-
 \bibliographystyle{abbrv}
 \bibliography{report_references}
 
@@ -512,7 +558,7 @@ Thanks to Joseph Bonneau for his advice and guidance throughout the research pro
 \label{appendix:decodetables}
 
 \begin{subtables}
-\begin{table}[h!]
+\begin{table*}[htbp]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -554,9 +600,9 @@ Thanks to Joseph Bonneau for his advice and guidance throughout the research pro
   \end{tabular}
   \caption{\label{first}Read permission message decoder, part (a). Message begins with \textit{``Site\_Name will receive the following info…''} See Figure~\ref{figure:messageexample} (left image) for an example.}
   \label{table:messagesr1}
-\end{table}
+\end{table*}
 
-\begin{table}[h!]
+\begin{table*}[htbp]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -587,11 +633,11 @@ Thanks to Joseph Bonneau for his advice and guidance throughout the research pro
   \end{tabular}
   \caption{\label{second} Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit{``...and your friends'…''} See Figure~\ref{figure:messageexample} (left image) for an example.}
   \label{table:messagesr2}
-\end{table}
+\end{table*}
 \end{subtables}
 
 
-\begin{table}[h!]
+\begin{table*}[htbp]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -607,10 +653,10 @@ Thanks to Joseph Bonneau for his advice and guidance throughout the research pro
   \end{tabular}
   \caption{Write permission message decoder. See Figure~\ref{figure:messageexample} (middle image) for an example. Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagesw}
-\end{table}
+\end{table*}
 
 
-\begin{table}[h]
+\begin{table*}[htpb]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -630,8 +676,9 @@ Thanks to Joseph Bonneau for his advice and guidance throughout the research pro
   \end{tabular}
   \caption{Extended permission message decoder. Message begins with \textit{``Site\_Name would like to…''} See Figure~\ref{figure:messageexample} (right image) for an example.}
   \label{table:messagese}
-\end{table}
+\end{table*}
 
+\FloatBarrier
 
 \section{Surveys}
 \label{appendix:surveys}
@@ -652,28 +699,28 @@ Figures~\ref{figure:61r}, ~\ref{figure:62r}, ~\ref{figure:63r}, and ~\ref{figure
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{61r}
+  \includegraphics[width=8.5cm]{61r}
   \caption{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from TripAdvisor.com.}
   \label{figure:61r}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{62r}
+  \includegraphics[width=8.5cm]{62r}
   \caption{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Splashscore.com.}
   \label{figure:62r}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{63r}
+  \includegraphics[width=8.5cm]{63r}
   \caption{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Jabong.com.}
   \label{figure:63r}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{64r}
+  \includegraphics[width=8.5cm]{64r}
   \caption{A read permissions survey. The correct answers are selected. This version of the survey uses the permissions from Flickr.com.}
   \label{figure:64r}
 \end{figure}
@@ -686,7 +733,7 @@ Figure~\ref{figure:61w} shows the survey to test understanding of write permissi
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{61w}
+  \includegraphics[width=8.5cm]{61w}
   \caption{A write permissions survey. The correct answers are selected.}
   \label{figure:61w}
 \end{figure}
@@ -698,11 +745,12 @@ Figure~\ref{figure:71r} shows the survey to test whether users understand that t
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{71r}
+  \includegraphics[width=8.5cm]{71r}
   \caption{The additional read permissions survey. The correct answers are selected.}
   \label{figure:71r}
 \end{figure}
 
+\FloatBarrier
 
 \section{Correspondence with Facebook Security}
 \label{appendix:correspondence}
@@ -719,7 +767,7 @@ As mentioned in Section~\ref{sec:fbresponse}, we sent a security bug report to F
 
 \noindent \emph{Reproduction Instructions / Proof of Concept:}
 \begin{enumerate}
-  \item I followed the Facebook documentation instructions to create a story with the publish\_actions permission: https://developers.facebook.com/docs/opengraph/getting-started/
+  \item I followed the Facebook documentation instructions to create a story with the publish\_actions permission: https://developers.facebook.com/docs/ opengraph/getting-started/
   \item If I replace publish\_actions in data-scope with any other write permission, including create\_note, I can still publish the story. (If I replace it with a read permission such as email I cannot.)
 \end{enumerate}
 
