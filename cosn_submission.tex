@@ -16,7 +16,7 @@
 
 \definecolor{darkred}{HTML}{E50000}
 
-\title{Clarity of Facebook Connect login permissions}
+\title{Cognitive disconnect:\\ Understanding Facebook Connect login permissions}
 
 \numberofauthors{2} 
 \author{
@@ -216,7 +216,7 @@ When we crawled the logins of the real sites, we recorded all of the permissions
 
 As mentioned previously, when the user logs in to a site with Facebook Connect they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions. These messages are algorithmically formed from the permissions present in the corresponding HTML input elements. We identified the phrase or word in the message that corresponds to each permission with our test site and verified the correspondences with the data from the 177 real sites. Most messages appear reasonably clear. However, the permissions that are always presented in groups (see Table~\ref{table:permgroups}) have one corresponding word or phrase in the message indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages, the corresponding groups of permissions being requested, and the meaning of the permissions according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
 
-\begin{table*}[htbp]
+\begin{table*}[htb]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
