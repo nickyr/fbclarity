@@ -1,17 +1,16 @@
-PAPER = template
-TEX = $(wildcard *.tex)
-BIB = references.bib
-FIGS = $(wildcard figures/*.pdf figures/*.png graphs/*.pdf graphs/*.png)
+
+BIB = report_references.bib
 
 .PHONY: all clean
 
-$(PAPER).pdf: $(TEX) $(BIB) $(FIGS) jpaper.cls
-	echo $(FIGS)
-	pdflatex $(PAPER)
-	bibtex $(PAPER)
-	pdflatex $(PAPER)
-	pdflatex $(PAPER)
+all: cosn_submission.pdf
+
+%.pdf: %.tex
+	pdflatex $(*).tex
+	bibtex $(*)
+	pdflatex $(*).tex
+	pdflatex $(*).tex
 
 clean:
-	rm -f *.aux *.bbl *.blg *.log *.out $(PAPER).pdf
+	rm -f *.aux *.bbl *.blg *.log *.out *.pdf
 
