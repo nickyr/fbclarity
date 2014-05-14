@@ -74,59 +74,63 @@ Our results are shown in Figure~\ref{figure:readpercents} and Figure~\ref{figure
 For all tested read permissions, over half of people correctly identified that said permission would be granted based on the message presented.
 On average, individual permissions were correctly identified 79.72\% of the time, comparable to previous research~\cite{egelman}.
 
-\begin{figure}[tbh!]
+\begin{figure}[tbh]
   \centering
   \includegraphics[width=8.5cm]{read_percents_cosn}
   \caption{Percentage of respondents who correctly identified that each read permission would be granted upon approval.}
   \label{figure:readpercents}
 \end{figure}
 
-\begin{figure}[h!]
+\clearpage
+
+However, write permissions were only correctly identified 25.91\% of the time, signicificantly worse than if users were randomly guessing.
+Using A Mann-Whitney $U$ test to compare the average understanding of users these two groups allows us to reject the null hypothesis with $p < 0.001$ and conclude that users understand read permissions significantly more accurately than they do write permissions.
+
+\begin{figure}[t!]
   \centering
   \includegraphics[width=8.5cm]{write_percents_cosn}
   \caption{Percentage of respondents who correctly identified that each write permission would be granted upon approval.}
   \label{figure:writepercents}
 \end{figure}
 
-However, write permissions were only correctly identified 25.91\% of the time, signicificantly worse than if users were randomly guessing.
-Using A Mann-Whitney $U$ test to compare the average understanding of users these two groups allows us to reject the null hypothesis with $p < 0.001$ and conclude that users understand read permissions significantly more accurately than they do write permissions.
-
-
 \section{Reading non-public data}
 
 In one pilot study we conducted a respondent stated that the requesting site would gain access to only a limited amount of data because their Facebook privacy settings made the rest not visible.
 This suggests a lack of understanding of how the read permissions work: upon granting the site read permissions, the site can access that information regardless of the user's privacy settings.
 
-We surveyed 100 participants to test if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. All three options are in fact correct.
-Our null hypothesis is that users would be equally likely to identify that data could be read regardless of its privacy setting.
+We surveyed 100 participants to test if this confusion was widespread. The survey presented the user with the permission message for Imgur, an image sharing site which requests the \texttt{user\_photos} permission. Users were asked to identify which photos Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. The correct response is all three.
 
-Results are shown in Figure~\ref{figure:privacypercents}. A G-test allows us to reject the null hypothesis with $p < .001$.
-It appears people are generally aware that they are giving access to their photo albums that are marked as public but are unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves.
-This suggests that the relatively high comprehension levels found in our previous survey (79.72\%) and Egelman's study (88\%) \cite{egelman} may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses).
-
-\begin{figure}[h!]
+\begin{figure}[b!]
   \centering
   \includegraphics[width=8.5cm]{privacy_percents_cosn}
   \caption{Percentage of respondents who correctly identified that Imgur.com would be able to see their photo albums of each privacy level upon authorization.}
   \label{figure:privacypercents}
 \end{figure}
 
+
+Results are shown in Figure~\ref{figure:privacypercents}. A $G$-test allows us to reject with high confidence ($p < .001$) the null hypothesis that users would be equally likely to identify that data could be read regardless of its privacy setting.
+It appears people are generally aware that they are giving access to their photo albums that are marked as public but are unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves.
+This suggests that the relatively high comprehension levels found in our survey (79.72\%) and prior work (88\%) \cite{egelman} may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public.
+%Don't need this
+%However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses).
+
+
 \section{Influence of requesting site}
 
 Our pilot participants also indicated that the site requesting the permissions may influence how they interpret the write permissions message. 
 We surveyed 300 separate participants to test this. The format of the survey was identical to the write permissions questions in the first survey and we provided the same options for the user to select. However, instead of using ``Hooli.com'' as the website in question, one third of respondents were presented with \emph{Flickr.com} (a photo and video sharing site), one third with \emph{TripAdvisor.com} (a travel site), and one third with \emph{iFlikeU.com} (an anonymous messaging site).
 
-Figure~\ref{figure:multipercents} illustrates the percentage of people who correctly identified that each permission would be given to each site after they clicked okay.
 
-\begin{figure}[h!]
+\begin{figure}[t!]
   \centering
   \includegraphics[width=8.5cm]{multi_percents_cosn}
   \caption{Percent of respondents who correctly identified which permissions would be granted for each requesting site.}
   \label{figure:multipercents}
 \end{figure}
 
+Figure~\ref{figure:multipercents} illustrates the percentage of people who correctly identified that each permission would be given to each site after they clicked okay.
 For ``publish app activity to Facebook,'' ``add and modify photos,'' ``add and modify videos,'' and ``publish checkins at locations,'' the null hypothesis (that the site identity does not affect how many people think a given permission is being requested) can be rejected with $p < .01$ using a $G$-test. More respondents thought Flickr would be able to add and modify photos and videos compared to other sites, which is reasonable since it is a photo and video sharing site. Likewise, many more people thought that TripAdvisor would be able to publish checkins at locations---a logical thing for a travel site to do.
-It appears that users' perception of the write permissions message is influenced by the site identity for some permissions.
+It appears that users' perception of the write permissions message is significantly influenced by the site identity for at least some permissions.
 
 \bibliographystyle{abbrv}
 \bibliography{report_references}  
