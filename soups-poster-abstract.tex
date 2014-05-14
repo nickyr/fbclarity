@@ -24,7 +24,7 @@
 %\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
 % --- End of Author Metadata ---
 
-\title{Clarity of Facebook Connect login permissions}
+\title{Poster: Clarity of Facebook Connect login permissions}
 
 \numberofauthors{2} 
 \author{
@@ -34,7 +34,7 @@ Nicky Robinson\\
        \email{ncrobins@princeton.edu}
 % 2nd. author
 \alignauthor
-Joseph Bonneau
+Joseph Bonneau\\
        \affaddr{Princeton University}\\
        \email{jbonneau@princeton.edu}
 }
@@ -46,23 +46,23 @@ Joseph Bonneau
 Single Sign-On (SSO) systems allow users to log in to websites using their username and password from a third-party identity provider.
 This means fewer passwords for users to remember which theoretically means they can create more complicated and therefore more secure passwords.
 
-Facebook Connect, based of of OAuth, is perhaps the most common SSO system.
+Facebook Connect, based off of OAuth, is perhaps the most common SSO system.
 It does more than just allow a user to sign in: sites can request access to parts of the user's Facebook profile.
 When the developer integrates the login system with their website, they request various permissions from Facebook to read information from the user's profile or publish content to their profile. %The permissions available to the developer can be seen in the Facebook Connect documentation \cite{fbpermissions}.
 
 Users logging in with Facebook Connect place a lot of trust in Facebook to only share information that the user authorizes.
 This relies both on Facebook granting only the permissions presented in the authorization messages and users correctly interpreting these messages.
-We explored user understanding of authorization messages via an online survey conducted over Amazon Mechanical Turk presenting users with Facebook permissions screens and asking them to identify which permissions would be granted if they approved the applications.
-We identified a number of areas where user understanding is inconsistent with the mechanics of Facebook connect.
-In general, users believe that Facebook connect authorizes far less information to be shared than they are actually authorizing.
+We explored user understanding of authorization messages via an online survey conducted over Amazon Mechanical Turk presenting users with Facebook permissions dialogues and asking them to identify which permissions would be granted if they approved the applications.
+We identified a number of areas where user understanding is inconsistent with the mechanics of Facebook Connect.
+In general, users believe that Facebook Connect authorizes far less information to be shared than it actually authorizes.
 
 \section{Read vs. write permissions}
 
-While experimenting with Facebook Connect and crawling sites which deploy it for authentication, we discovered an interesting design decision: while developers may request read permissions for individual items in a user's profile on a granular basis, write permission are all-or-nothing.
-If the site requests any write permissions, it is granted all possible write permissions with users being shown a generic message saying the app is requesting permission to ``post to Facebook for you.''
-After corresponding with Facebook, we confirmed that this was not a bug but an intentional design decision.
+While experimenting with Facebook Connect and crawling sites which deploy it for authentication, we discovered that while developers may request read permissions for individual items in a user's profile on a granular basis, write permission are all-or-nothing.
+If the developer requests any write permissions, Facebook shows the user a generic message saying that the app is requesting permission to ``post to Facebook for you.'' If the user clicks okay, the site will receive all write permissions.
+We communicated with Facebook Security and confirmed that this was not a bug but a design decision to make the messages easier to understand.
 
-To test this, we conducted a survey with 600 respondents.
+To test whether it is actually easier to understand, we conducted a survey with 600 respondents.
 We presented half with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. 
 The other half were presented with read permissions questions.
 Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}).
@@ -77,33 +77,32 @@ On average, individual permissions were correctly identified 79.72\% of the time
 \begin{figure}[tbh!]
   \centering
   \includegraphics[width=8.5cm]{read_percents_cosn}
-  \caption{Percentage of respondents who correctly identified that each permission would be granted upon approval.}
+  \caption{Percentage of respondents who correctly identified that each read permission would be granted upon approval.}
   \label{figure:readpercents}
 \end{figure}
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=8.5cm]{write_percents_cosn}
-  \caption{Percentage of respondents who correctly identified that each permission would be granted upon approval.}
+  \caption{Percentage of respondents who correctly identified that each write permission would be granted upon approval.}
   \label{figure:writepercents}
 \end{figure}
 
 However, write permissions were only correctly identified 25.91\% of the time, signicificantly worse than if users were randomly guessing.
-Using A Mann-Whitney $U$ test to compare the average understanding of users these two groups allows us to reject the null hypothesis with high confidence ($p < 0.001$) and conclude that users understand read permissions significantly more accurately than they do write permissions.
+Using A Mann-Whitney $U$ test to compare the average understanding of users these two groups allows us to reject the null hypothesis with $p < 0.001$ and conclude that users understand read permissions significantly more accurately than they do write permissions.
 
 
-\section{Reading non-publicly visible data}
+\section{Reading non-public data}
 
-In one pilot study we completed a respondent stated that the requesting site would gain access to only a limited amount of data because their Facebook privacy settings made the rest not visible.
+In one pilot study we conducted a respondent stated that the requesting site would gain access to only a limited amount of data because their Facebook privacy settings made the rest not visible.
 This suggests a lack of understanding of how the read permissions work: upon granting the site read permissions, the site can access that information regardless of the user's privacy settings.
 
 We surveyed 100 participants to test if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. All three options are in fact correct.
 Our null hypothesis is that users would be equally likely to identify that data could be read regardless of its privacy setting.
 
-Results are shown in Figure~\ref{figure:privacypercents}
-It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves.
-\textbf{TODO: G-test results}
-This suggests that the relatively high comprehension levels found in my previous survey (79.72\%) and Egelman's study (88\%) \cite{egelman} may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses).
+Results are shown in Figure~\ref{figure:privacypercents}. A G-test allows us to reject the null hypothesis with $p < .001$.
+It appears people are generally aware that they are giving access to their photo albums that are marked as public but are unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves.
+This suggests that the relatively high comprehension levels found in our previous survey (79.72\%) and Egelman's study (88\%) \cite{egelman} may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses).
 
 \begin{figure}[h!]
   \centering
