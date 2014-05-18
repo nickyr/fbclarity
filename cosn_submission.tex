@@ -1,5 +1,8 @@
 \documentclass[10pt]{sig-alternate-10pt}
-
+\usepackage[
+hidelinks,
+pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions}
+]{hyperref}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{multirow}
 \usepackage{graphicx}
@@ -7,6 +10,8 @@
 \usepackage{subfloat}
 \usepackage{caption}
 \usepackage{placeins}
+\usepackage{verbatim}
+
 
 \begin{document}\sloppy
 
@@ -21,7 +26,7 @@
 \numberofauthors{2} 
 \author{
 \alignauthor
-Nicholas Robinson\\
+Nicky Robinson\\
        \affaddr{Princeton University}\\
        \email{ncrobins@princeton.edu}
 \alignauthor
@@ -46,11 +51,26 @@ We also find thar users generally do not understand the way Facebook Connect per
 \keywords{Online social networks, permissions, privacy, Facebook}
 
 \section{Introduction}
-Single Sign-On (SSO) systems allow users to log in to websites using their username and password from a third-party identity provider, such as Facebook, Google, or Twitter. This creates fewer passwords for users to remember, theoretically meaning that they can have more complicated and therefore more secure passwords \cite{openidsecurity}. SSO systems have become increasingly common; Facebook's service is perhaps the most common. 
+Single Sign-On (SSO) systems allow users to log in to websites (called \textit{relying sites} or \textit{relying parties}) using their username and password from a third-party \textit{identity provider}.
+This creates fewer passwords for users to remember, theoretically meaning that they can have more complicated and therefore more secure passwords \cite{openidsecurity}.
+Facebook Connect is perhaps the most popular SSO system on the web today.
+A key reason is that Facebook Connect, like many SSO systems based off of the OAuth protocol, does more than just allow a user to sign in: sites can request access to read parts of the user's Facebook profile or write data back their profile.
+This has been sufficient in practice to overcome the lack of adoption incentives for relying parties which has plagued many other SSO systems on the web~\cite{sun10}.
+%This is a feature of many SSO systems based off of the OAuth protocol.
 
-Facebook Connect does more than just allow a user to sign in: sites can request access to parts of the user's Facebook profile (this is a feature of many SSO systems based off of the OAuth protocol). When the developer integrates the login system with their website, they design it to request various permissions from Facebook. These permissions allow them to see information on the user's profile or publish content to their profile. %The permissions available to the developer can be seen in the Facebook Connect documentation \cite{fbpermissions}.
+A second important selling point is that Facebook Connect requires user approval and requires relying sites to request a specific set of permission from the user up front before reading or writing data from the user's profile.
+These are presented to the user in a series of dialogs (shown in Figure~\ref{figure:messageexample}) which the user must accept prior to logging into a relying site for the first time.
+In the words of Facebook \textit{``The user will have total control of the permissions granted''}~\cite{fb-connect-announce}.
+%Facebook Login requires user approval Developers integrating Facebook Connect may request various permissions from Facebook allowing them to see information on the user's profile or publish content to their profile. %The permissions available to the developer can be seen in the Facebook Connect documentation \cite{fbpermissions}.
 
-When a user logs in to a website using Facebook Connect, they are presented with up to three dialogues asking them to authorize the website to receive the desired permissions. The first message corresponds to the \emph{read} permissions, permissions that allow the site to see information on the user's profile. The second corresponds to the \emph{write} permissions, which allow the site to post various things on the user's profile. The third (or second, if no write permissions were requested) corresponds to the \emph{extended} permissions. These permissions are for more sensitive things, such as sending the user text messages and marking their notifications as read. The user can refuse to grant write and extended permissions and still log in.\footnote{The documentation \cite{fbpermsinstructions} provides more details about these groups, although it breaks them down into six different groups.} If the user approves these permissions, they are logged in to the site and the site receives their information from Facebook. Figure~\ref{figure:messageexample} shows examples of messages asking the user to authorize permissions.
+%probably too much for the intro
+\begin{comment}
+When a user logs in to a website using Facebook Connect, they are presented with up to three dialogues asking them to authorize the website to receive the desired permissions. The first message corresponds to the \emph{read} permissions, permissions that allow the site to see information on the user's profile. The second corresponds to the \emph{write} permissions, which allow the site to post various things on the user's profile. The third (or second, if no write permissions were requested) corresponds to the \emph{extended} permissions. These permissions are for more sensitive things, such as sending the user text messages and marking their notifications as read. The user can refuse to grant write and extended permissions and still log in.\footnote{The documentation \cite{fbpermsinstructions} provides more details about these groups, although it breaks them down into six different groups.} If the user approves these permissions, they are logged in to the site and the site receives their information from Facebook.  shows examples of messages asking the user to authorize permissions.
+\end{comment}
+
+%Users logging in with Facebook Connect place a lot of trust in Facebook to only share information that the user authorizes.
+Effective user control relies both on Facebook granting only the permissions intended by developers and on users correctly understanding the permission requests they authorize.
+We will explore both questions in this paper and show that:
 
 \begin{figure*}[htbp]
   \centering
@@ -59,13 +79,14 @@ When a user logs in to a website using Facebook Connect, they are presented with
   \label{figure:messageexample}
 \end{figure*}
 
-Users logging in with Facebook Connect place a lot of trust in Facebook to only share information that the user authorizes. This relies not only on Facebook granting only the permissions presented in the authorization messages but also on users correctly interpreting these messages. We will explore both in this paper and show that:
+
 
 \begin{itemize}
   \item Facebook Connect sometimes asks the user to authorize more permissions than the developer intended to request.
-  \item Write permissions are granted to sites on an all-or-nothing basis. For example, if a site can update the user's status, it can also upload photos.
-  \item Users generally understand which read permissions are being requested when they log in, although many think that they are only giving access to data marked as public.
-  \item Users do not understand the variety of write permissions sites will receive upon authorization.
+  \item Write permissions are granted to sites on an all-or-nothing basis. For example, if a site wants to update the user's status, it must also gain permission to upload photos.
+  \item Users generally understand which read permissions are being requested when they log in, although many don't realize they are granting access to data they have marked as private using their privacy settings.
+  \item Users generally do not understand the variety of write permissions sites will receive upon authorization. This indicates that, despite Facebook's claims that all-or-nothing write permissions are ``simpler'' for users to understand, users the more granular read permissions much better.
+  \item  User are influenced by the identity of the relying party, for example, they are much more likely to understand a photo sharing website can upload photos to their account. This suggests users are assuming a \textit{contextual integrity} model of privacy~\cite{contextual-integrity}, although this not implemented technically.
 \end{itemize}
 
 
