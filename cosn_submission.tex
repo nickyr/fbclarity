@@ -89,19 +89,6 @@ We will explore both questions in this paper and show that:
   \item  User are influenced by the identity of the relying party, for example, they are much more likely to understand a photo sharing website can upload photos to their account. This suggests users are assuming a \textit{contextual integrity} model of privacy~\cite{contextual-integrity}, although this not implemented technically.
 \end{itemize}
 
-
-\section{Related research}
-\label{sec:research}
-
-Many researchers have studied the security and permissions systems of various apps\footnote{The Facebook Connect SSO system uses the same system as native Facebook apps---creating a Facebook login on a website requires creating a Facebook app \cite{fbexample}.} and SSO systems. Sun and Beznosov \cite{devildetails} uncovered vulnerabilities in many major OAuth SSO implementations. Chaabane et al. \cite{chaabane} and Huber et al. \cite{appinspect} identified information leaks in Facebook and RenRen apps. There have also been several studies of what permissions sites request, such as Frank et al.'s study in which Facebook apps were grouped into categories based on the permissions they request \cite{miningpermissions}.
-
-Some studies have tested user comprehension of SSO systems as well. A 2011 audit of Facebook Ireland looked at, among other things, how clearly the Facebook app system is presented to users. It also states that it ``is not possible for an application to access personal data over and above that to which an individual gives their consent or enabled by the relevant settings''---that is, Facebook's permissions do appropriately limit what data an app can access \cite{irishaudit}.
-
-Sun et al. studied user understanding of the authentication process in general---for example, whether users understood that the site they are logging in to cannot see the password for the identity provider (Facebook, Google, etc.) \cite{ssoperspective}. The study most directly related to ours is Egelman \cite{egelman}, which studied whether users were willing to use Facebook Connect and how well they understand (and how much they pay attention to) the permissions messages. Egelman concluded that 88\% of users have a general understanding that their profile information will be shared with the site they are logging in to, but that they typically do not pay attention to the specifics of the dialogues and do not make their decision whether to use Facebook Connect based on which permissions are being requested.
-
-Our study differs from previous studies by determining what specific permissions correspond to the messages presented to the user and by evaluating user comprehension of these permissions. This lets us answer most precisely whether users understand exactly what information they are sharing by using Facebook Connect. In addition, Egelman only looked at read permissions. We found that write permissions are much more confusing to users.
-
-
 \section{Which permissions does Facebook actually give?}
 
 The first step to determining whether permissions are presented clearly is understanding which permissions are actually being granted. Facebook Connect's process of a site requesting permissions from a user can be broken down into three steps:
@@ -558,6 +545,16 @@ This research could be continued in a variety of directions.
   \item It is clear that users do not understand the full range of write permissions being requested. However, Egelman \cite{egelman} determined that users make their decision to use Facebook Connect or not before they see the permissions requested. Egelman only tested read permissions, though. A similar study could see how the presence of write permissions affects users' decisions to use Facebook Connect. It could also test whether explicitly stating what write permissions are being requested and varying the number of write permissions requested affects whether users are willing to use the system.
 \end{itemize}
 
+\section{Related work}
+\label{sec:research}
+
+Many researchers have studied the security and permissions systems of various apps\footnote{The Facebook Connect SSO system uses the same system as native Facebook apps---creating a Facebook login on a website requires creating a Facebook app \cite{fbexample}.} and SSO systems. Sun and Beznosov \cite{devildetails} uncovered vulnerabilities in many major OAuth SSO implementations. Chaabane et al. \cite{chaabane} and Huber et al. \cite{appinspect} identified information leaks in Facebook and RenRen apps. There have also been several studies of what permissions sites request, such as Frank et al.'s study in which Facebook apps were grouped into categories based on the permissions they request \cite{miningpermissions}.
+
+Some studies have tested user comprehension of SSO systems as well. A 2011 audit of Facebook Ireland looked at, among other things, how clearly the Facebook app system is presented to users. It also states that it ``is not possible for an application to access personal data over and above that to which an individual gives their consent or enabled by the relevant settings''---that is, Facebook's permissions do appropriately limit what data an app can access \cite{irishaudit}.
+
+Sun et al. studied user understanding of the authentication process in general---for example, whether users understood that the site they are logging in to cannot see the password for the identity provider (Facebook, Google, etc.) \cite{ssoperspective}. The study most directly related to ours is Egelman \cite{egelman}, which studied whether users were willing to use Facebook Connect and how well they understand (and how much they pay attention to) the permissions messages. Egelman concluded that 88\% of users have a general understanding that their profile information will be shared with the site they are logging in to, but that they typically do not pay attention to the specifics of the dialogues and do not make their decision whether to use Facebook Connect based on which permissions are being requested.
+
+Our study differs from previous studies by determining what specific permissions correspond to the messages presented to the user and by evaluating user comprehension of these permissions. This lets us answer most precisely whether users understand exactly what information they are sharing by using Facebook Connect. In addition, Egelman only looked at read permissions. We found that write permissions are much more confusing to users.
 
 
 \section{Conclusions}
