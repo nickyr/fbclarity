@@ -89,7 +89,7 @@ We will explore both questions in this paper and show that:
   \item  User are influenced by the identity of the relying party, for example, they are much more likely to understand a photo sharing website can upload photos to their account. This suggests users are assuming a \textit{contextual integrity} model of privacy~\cite{contextual-integrity}, although this not implemented technically.
 \end{itemize}
 
-\section{Which permissions does Facebook actually give?}
+\section{Implementation of Facebook Connect permissions}
 
 The first step to determining whether permissions are presented clearly is understanding which permissions are actually being granted. Facebook Connect's process of a site requesting permissions from a user can be broken down into three steps:
 
@@ -105,9 +105,9 @@ Theoretically, these three sets of permissions should be the same: The developer
 
 Unfortunately, Facebook Connect's documentation \cite{fbdocs} consists of a lot of incomplete and outdated information supplemented by blog posts from their engineers. As such, there is very little explanation of how permissions the developer requests are presented to the user for approval.
 
-To gain a better understanding, we combined information from the documentation, observations from creating our own Facebook Connect login for a dummy site, and data from a couple hundred real sites.
+To gain a better understanding, we combined information from the documentation, observations from creating our own Facebook Connect login for a dummy site, and data from several hundred real sites.
 
-\subsubsection{Getting data from real sites}
+\subsubsection{Obtaining a list of relying sites}
 
 The data from real sites was obtained by web crawling. The first step was to compile a list of sites with Facebook Connect logins. Starting with the most recent (October 2013) AppInspect \cite{appinspect} database of 25,000 Facebook apps, we filtered it down to only apps that had pages on the Facebook App Center that listed external websites (about 400). We then manually searched these to find which ones had Facebook Connect logins, which brought the list down to 91 sites.
 
@@ -289,7 +289,7 @@ We sent a security bug report to Facebook stating that we could use the \emph{pu
 \section{Users' understanding of permissions}
 \label{sec:understanding}
 
-As mentioned in Section~\ref{sec:research}, Egelman \cite{egelman} determined that 88\% of users have a general understanding of Facebook permissions; however, he studied only the read permissions dialogues. The results of our investigation indicated that confusion is more likely to arise with the write permissions since they are all grouped together and presented with a vague message. We conducted a survey to test this. We hypothesize that users understand Facebook's read permissions messages better than they understand Facebook's write permissions messages.\footnote{Extended permissions were not tested since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested extended permissions).}
+Previous research  by Egelman \cite{egelman} found that 88\% of users have a general understanding of Facebook permissions; however, he studied only the read permissions dialogues. The results of our investigation indicated that confusion is more likely to arise with the write permissions since they are all grouped together and presented with a vague message. We conducted a survey to test this. We hypothesize that users understand Facebook's read permissions messages better than they understand Facebook's write permissions messages.\footnote{Extended permissions were not tested since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested extended permissions).}
 
 \subsection{Methodology}
 
