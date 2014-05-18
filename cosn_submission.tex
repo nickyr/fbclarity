@@ -33,12 +33,17 @@ Joseph Bonneau\\
 \maketitle
 
 \begin{abstract}
-We study Facebook Connect's permissions system to determine if it functions the way users and developers expect. Through web crawling, experimentation, surveys, and research, we determine that its behavior is unexpected in many areas. We show that it can create permission requests for more permissions than the developer intended and consequently permissions that allow a site to post to the user's profile are granted on an all-or-nothing basis. We discuss how the requested permissions are presented to the user and we demonstrate that users generally understand the data sites can see on their profile but do not understand the many different things the sites can post.
+We study Facebook Connect's permissions system using crawling, experimentation, surveys, and research and determine that its works differently than both users and developers expect in several ways.
+We show that more permissions can be granted than the developer intended.
+In particular, permissions that allow a site to post to the user's profile are granted on an all-or-nothing basis.
+We evaluate how the requested permissions are presented to the user and find that, while users generally understand what data sites can read from their profile, they generally do not understand the many different things the sites can post.
+In the case of write permissions, we show that user expectations are influenced by the identity of the requesting site which in reality has no impact on what is enforced.
+We also find thar users generally do not understand the way Facebook Connect permissions interact with Facebook's privacy settings.
 \end{abstract}
 
 \category{D.4.6}{Security and Protection}{Access Controls}
 \terms{Security, Human Factors}
-\keywords{Online social networks, permissions, privacy}
+\keywords{Online social networks, permissions, privacy, Facebook}
 
 \section{Introduction}
 Single Sign-On (SSO) systems allow users to log in to websites using their username and password from a third-party identity provider, such as Facebook, Google, or Twitter. This creates fewer passwords for users to remember, theoretically meaning that they can have more complicated and therefore more secure passwords \cite{openidsecurity}. SSO systems have become increasingly common; Facebook's service is perhaps the most common. 
