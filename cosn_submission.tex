@@ -82,8 +82,6 @@ We will explore both questions in this paper and show that:
   \label{figure:messageexample}
 \end{figure*}
 
-
-
 \begin{itemize}
   \item Facebook Connect sometimes asks the user to authorize more permissions than the developer intended to request.
   \item Write permissions are granted to sites on an all-or-nothing basis. For example, if a site wants to update the user's status, it must also gain permission to upload photos.
@@ -266,15 +264,6 @@ The write permissions, however, are in a group of eight, which in fact contains 
 \end{figure}
 
 %The significance of Facebook giving these permissions in groups will be discussed after discussing the way Facebook presents them to the user.
-
-\subsection{How permissions are presented to the user} 
-\label{sec:messages} 
-
-As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
-We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
-Most messages appear reasonably clear.
-However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
-
 \begin{table*}[htb]
   \centering
   \begin{tabular}{|l|l|l|}
@@ -308,11 +297,19 @@ However, the grouped permissions (see Table~\ref{table:permgroups}) are displaye
   \caption{Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagegrouped}
 \end{table*}
+\subsection{How permissions are presented to the user} 
+\label{sec:messages} 
+
+As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
+We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
+Most messages appear reasonably clear.
+However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
+
 
 \subsection{Facebook's response}
 \label{sec:fbresponse}
 
-We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{The full correspondence with Facebook Security is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
+We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{Our full correspondence with Facebook is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
 This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand, which we turn to in the next section.
 
 
