@@ -91,61 +91,83 @@ We will explore both questions in this paper and show that:
 
 \section{Implementation of Facebook Connect permissions}
 
-The first step to determining whether permissions are presented clearly is understanding which permissions are actually being granted. Facebook Connect's process of a site requesting permissions from a user can be broken down into three steps:
+The first step in determining whether the permissions system provides users with effective control is understanding which permissions are actually being granted when a given authorization message is displayed.
+Facebook Connect's process of a site requesting permissions from a user can be broken down into three steps:
 
 \begin{enumerate}
-  \item When the developer integrates their site with Facebook Connect, they create a login flow that requests a set of permissions from Facebook.
-  \item When a user logs in to the site using Facebook Connect, Facebook's API creates a request for a set of permissions.
-  \item Facebook presents the user with a dialogue asking them to approve a set of permissions.
+  \item During login flow, relying parties request a set of permissions from the Facebook Connect API. We'll call this set the \textit{requested permissions}.
+  \item Facebook receives the requested permissions and translates them into a set of permissions for approval which we'll call the \textit{granted permissions}.
+  \item Facebook translates the the granted permissions into a dialog presented to the user for approval. We'll call the text the \textit{displayed permissions}.
 \end{enumerate}
 
-Theoretically, these three sets of permissions should be the same: The developer asks for certain permissions, Facebook formats a request for those and only those permissions, and Facebook clearly identifies all of those permissions to the user. This section of the paper explores these three sets of permissions and analyzes their similarities and differences.
+Ideally, these three sets of permissions would be identical and the text shown to the user would clearly represent them. In this section we'll explore the difference between the requested and granted permissions; we'll discuss the relation of the displayed to granted permissions in Section~\ref{sec:understanding}.
 
 \subsection{Methodology}
 
-Unfortunately, Facebook Connect's documentation \cite{fbdocs} consists of a lot of incomplete and outdated information supplemented by blog posts from their engineers. As such, there is very little explanation of how permissions the developer requests are presented to the user for approval.
-
-To gain a better understanding, we combined information from the documentation, observations from creating our own Facebook Connect login for a dummy site, and data from several hundred real sites.
+Unfortunately, Facebook's own documentation \cite{fbdocs} is incomplete and sometimes outdated. 
+As such, there is very little explanation of how requested permissions are eventually translated into permissions displayed to the user.
+To gain a better understanding, we combined information from the documentation with observations from integrating Facebook Connect login with a test site and crawled data from several hundred relying sites.
 
 \subsubsection{Obtaining a list of relying sites}
 
-The data from real sites was obtained by web crawling. The first step was to compile a list of sites with Facebook Connect logins. Starting with the most recent (October 2013) AppInspect \cite{appinspect} database of 25,000 Facebook apps, we filtered it down to only apps that had pages on the Facebook App Center that listed external websites (about 400). We then manually searched these to find which ones had Facebook Connect logins, which brought the list down to 91 sites.
+%The data from real sites was obtained by web crawling. The first step was to compile a list of sites with Facebook Connect logins.
+To obtain a list of relying sites implementing Facebook Connect, we started with the most recent (October 2013) AppInspect \cite{appinspect} database of 25,000 Facebook apps.
+We filtered this list down to about 400 apps with an external site listed on the Facebook App Center.
+Finally, we manually examined these to find 91 which had a Facebook Connect login.
 
-Unfortunately, the AppInspect database does not include apps that are used solely for Facebook Connect---it only includes those that have native Facebook apps (although some of these also have sites with Facebook Connect). In part because of this, the majority of the sites we found from the database are relatively obscure. To make up for these deficiencies, we manually went through the Alexa Top 500 \cite{alexa} websites from February 27\textsuperscript{th}, 2014 and identified the ones with Facebook Connect logins (112 sites). 
+Unfortunately, the AppInspect database does not include apps that are used solely for Facebook Connect, only those that have native Facebook apps. 
+%In part because of this, the majority of the sites we found from the database are relatively obscure.
+To make up for these deficiencies, we took the Alexa Top 500~\cite{alexa} websites from February 27\textsuperscript{th}, 2014 and manually identified those with Facebook Connect logins (112 sites). 
 
-Combining the two lists yields 203 sites, about half of which receive a lot of monthly traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database). This list provides a diverse sampling of the websites people log in to with Facebook Connect.
+Combining these two lists yielded a diverse list of 203 sites, about half which receive heavy traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database).
+%This list provides a diverse sampling of the websites people log in to with Facebook Connect.
 
-Using a Selenium-based web crawler being developed by the Princeton Center for Information Technology Policy (CITP)'s Web Fairness group, we automated logins to all 203 sites and recorded the permissions they request and the corresponding messages presented to the users. (The way the permissions they request was determined will be discussed in Section~\ref{sec:inputels}.) Twenty-six of the 203 sites used an older implementation of Facebook Connect; this paper will focus on the 177 with the current format.
+For crawling we used OpenWPM, a Selenium-based web crawler being developed by the Princeton Center for Information Technology Policy (CITP). 
+We performed automated logins to all 203 sites and recorded the requested, granted, and displayed permissions.
+% they request and the corresponding messages presented to the users. (The way the permissions they request was determined will be discussed in Section~\ref{sec:inputels}.)
+Twenty-six of the 203 sites used an older implementation of Facebook Connect; this paper will focus on the 177 with the current format.
 
-\subsection{How developers request permissions}
+\subsection{Requested permissions}
 
-The first step in the permissions presentation process as we outlined it above is the developer designing their site to request permissions from Facebook. For Facebook Connect, this is done by listing the desired permissions in a ``scope'' or ``data-scope'' parameter when the login process is initiated using Facebook's JavaScript SDK, Facebook's login button, or a manually built login system \cite{fbpermsinstructions}. The developer can request any of the permissions listed in the documentation \cite{fbpermissions}, although some are now deprecated (including, it appears, some that are not listed as deprecated).
+%The first step in the permissions presentation process as we outlined it above is the developer designing their site to request permissions from Facebook.
+Developers request permissions in a parameter called ``scope'' or ``data-scope'' when the login process is initiated using Facebook's JavaScript SDK, Facebook's login button, or a manually built login system \cite{fbpermsinstructions}.
+The developer can request any of the permissions listed in the documentation \cite{fbpermissions}, although some are deprecated and will have no impact on the granted permissions.% (including, it appears, some that are not listed as deprecated).
 
-The value of the scope is visible in the URL of the page where the user is asked to approve the read permissions, after the string ``scope='' (see Figure~\ref{figure:scopeinurl}). We confirmed using the test site that the values that show up in the URL are indeed the exact ones the developer puts in the site's scope parameter. When crawling the sites, we parsed the URLs to extract the permissions requested by developers.
+The scope parameter is visible in the URL of the page where the user is asked to approve permissions (see Figure~\ref{figure:scopeinurl}).
+We confirmed using our test site that this value is indeed exactly what the developer requested.
+%When crawling the sites, we parsed the URLs to extract the permissions requested by developers.
 
 \floatstyle{boxed}
 \restylefloat{figure}
 \begin{figure}[h!]
-  {\small{\fontfamily{phv}\selectfont https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\\&client\_id=138615416238413\&display=popup\&domain=www.timecr\\unch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\\\%3A\%2F\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2\\F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df17cdd7f881aff\%26\\domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%\\252Fwww.timecrunch.me\%252Ff2dc123d3ff5394\%26relation\%3Do\\pener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\%2Csi\\gned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2\\Cuser\_groups\%2Cfriends\_groups\%2Cpublish\_stream}\&sdk=joey}}
-  \caption{The URL for the first message presented to the user when logging in to Timecrunch.me. The scope and permissions are colored red. The permissions being requested are \emph{email}, \emph{create\_event}, \emph{offline\_access} (deprecated), \emph{user\_groups}, \emph{friends\_groups}, and \emph{publish\_stream}. (`\%2C' represents a comma.)}
+  {\small{\fontfamily{phv}\selectfont %https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\\&client\_id=138615416238413\&display=popup\&domain=www.timecr\\unch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\\\%3A\%2F\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2\\F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df17cdd7f881aff\%26\\domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%\\252Fwww.timecrunch.me\%252Ff2dc123d3ff5394\%26relation\%3Do\\pener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\%2Csi\\gned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2\\Cuser\_groups\%2Cfriends\_groups\%2Cpublish\_stream}\&sdk=joey}}
+https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\
+\&domain=www.timecrunch.me\&response\_type=token\%2Csigned\_re\\
+quest\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2Cuser\_gr\\
+oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
+\caption{Example requested permissions (colored in red) shown in the scope parameter of the approval page URL for \url{timecrunch.me}.
+  %The permissions being requested are \emph{email}, \emph{create\_event}, \emph{offline\_access} (deprecated), \emph{user\_groups}, \emph{friends\_groups}, and \emph{publish\_stream}. (`\%2C' represents a comma.)
+  }
   \label{figure:scopeinurl}
 \end{figure}
 \floatstyle{plain}
 \restylefloat{figure}
-\subsection{How Facebook creates the permissions request}
+\subsection{Granted permissions}
 
-In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
+Facebook receives the requested permissions and translates them into a set of granted permissions which may exclude requested permissions which are deprecated or in some cases add additional permisions. 
+%In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
+Two permissions are always added regardless of what is requested which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}. These are \emph{public\_profile}, which gives access to the user's public profile, and \emph{user\_friends}, which gives access to the user's friends list. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
 
-To begin, there are two permissions that are identified as ``Basic Info/Default permissions'' and are ``included as part of every permissions request'' \cite{fbpermsinstructions}. These two permissions are \emph{public\_profile}, which gives access to the user's public profile, and \emph{user\_friends}, which gives access to the user's friends list. The documentation does not mention any other permissions that may be requested outside of what the developer asked for.
-
-\subsubsection{Identifying the actual permissions being requested}
+%\subsubsection{Identifying granted permissions in practice}
 \label{sec:inputels}
 
-The Facebook documentation does not say how a user presented with a message asking them to authorize permissions can identify the exact permissions being requested---they have only the message presented to them. But to understand how Facebook handles permissions, we need to know exactly which permissions will be granted if the user clicks okay. 
+%The Facebook documentation does not say how a user presented with a message asking them to authorize permissions can identify the exact permissions being requested---they have only the message presented to them. But to understand how Facebook handles permissions, we need to know exactly which permissions will be granted if the user clicks okay. 
 
-The first page presented to the user when asking them to approve permissions has three hidden input HTML elements named \emph{read}, \emph{write}, and \emph{extended} whose values are permissions (see Figure~\ref{figure:inputels}). Further investigation indicates that these three elements hold all of the permissions that will be granted if the user clicks okay (and the scope variable in the URL does not).
+The approval page presented to the user has three hidden input HTML elements named \emph{read}, \emph{write}, and \emph{extended} whose values are the granted permissions (see Figure~\ref{figure:inputels}).
+We confirmed with our test site that these permissions are actually granted and may be used by the reyling site, regardless of the requested permissions.
+%Further investigation indicates that these three elements hold all of the permissions that will be granted if the user clicks okay (and the scope variable in the URL does not).
 
-\begin{figure}[h!]
+\begin{figure}[tb!]
   \centering
   \def\arraystretch{1.3}
   \begin{tabular}{l}
@@ -161,23 +183,35 @@ The first page presented to the user when asking them to approve permissions has
     } \\ 
      \\
   \end{tabular}
-  \caption{From top: The \emph{read}, \emph{write}, and \emph{extended} input elements from the HTML for the first message presented to the user when logging in to Timecrunch.me. Permissions are colored red. \emph{private} is not actually a permission, but always appears in the \emph{read} element. \emph{offline\_access} does not appear since it is deprecated. If a site did not have any permissions of one type, that element's value would be empty.}
+  \caption{Example granted permissions (colored in red) shown by the \emph{read}, \emph{write}, and \emph{extended} input elements on the permissions approval page for \url{timecrunch.me}. 
+  %Permissions are colored red. 
+  %\emph{private} is not actually a permission, but always appears in the \emph{read} element. 
+  %\emph{offline\_access} does not appear since it is deprecated.
+  %If a site did not have any permissions of one type, that element's value would be empty.
+  }
   \label{figure:inputels}
 \end{figure}
 
 
-First, \emph{public\_profile} and \emph{user\_friends} (the aforementioned default permissions) always appear in the element named \emph{read} although they never appear in the scope unless explicitly requested by the developer. We verified this both in the test site and with the data from the sites we crawled: All 177 sites with the current login format had both permissions in the \emph{read} input element.
+First, we confirmed that with every site cralwed the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they never appeared in the scope.
+% unless explicitly requested by the developer. We verified this both in the test site and with the data from the sites we crawled: All 177 sites with the current login format had both permissions in the \emph{read} input element.
 
-In addition, we identified several permissions that when requested by the developer cause certain other permissions to appear in the input elements with them. (These will be discussed in more detail in the Section~\ref{sec:developerdiffs}.) With the test site we verified that the permissions the site gets are the ones specified in the HTML, not just the ones specified in the scope. For example, the Facebook documentation has an example of how to publish a story (liking an article) on the user's timeline using Facebook Connect \cite{fbexample}. It states that this requires the \emph{publish\_actions} permission. However, if we (as a developer) request the \emph{create\_note} permission in the scope, \emph{publish\_actions} appears in the HTML in the \emph{write} input element and the story can still be published. (Requesting a permission such as \emph{email} does not put \emph{publish\_actions} in the HTML and the story cannot be published.)
+In addition, we identified several requested permissions which always cause extra permissions to be granted along with them (these will be discussed in more detail in the Section~\ref{sec:developerdiffs}).
+%With the test site we verified that the permissions the site gets are the ones specified in the HTML, not just the ones specified in the scope. 
+For example, Facebook's documentation states that publishing a story (such as liking an article) requires the \emph{publish\_actions} permission.
+However, if the \emph{create\_note} permission is requested, \emph{publish\_actions} will also appear as a granted permissions and this will allow stories to be published.
+%(Requesting a permission such as \emph{email} does not put \emph{publish\_actions} in the HTML and the story cannot be published.)
+Through experimentation with our test site, we determined exactly which permissions are always grouped together, listed in Table~\ref{table:permgroups}.
+If any one permission in a group is requested, all permissions in the group are granted.
+We noted that permissions which are always granted together are displayed to the user with a single message, which we will discuss further in Section~\ref{sec:messages}.
+%, but it suggests that Facebook intends for them to always be given together. This further supports that the permissions in the HTML are the ones that Facebook will actually give the site, not just the ones the developer places in the scope.
 
-Finally, the aforementioned permissions that always appear in the HTML together are presented to the user with a single message. This will also be discussed in more detail in Section~\ref{sec:messages}, but it suggests that Facebook intends for them to always be given together. This further supports that the permissions in the HTML are the ones that Facebook will actually give the site, not just the ones the developer places in the scope.
-
-\subsubsection{Differences from what the developer requested}
+%\subsubsection{Differences from what the developer requested}
 \label{sec:developerdiffs}
 
-Through experimentation with our test site, we determined that several permissions are given in groups. That is, if one permission in a group is put in the scope parameter, all permissions in the group are present in the HTML and are actually granted upon user approval. The permissions that are grouped together are listed in Table~\ref{table:permgroups}.
 
-\begin{table}[h!]
+
+\begin{table}[tb]
   \centering
   \begin{tabular}{|l|}
     \hline
@@ -207,11 +241,12 @@ Through experimentation with our test site, we determined that several permissio
     \emph{rsvp\_event}, \emph{create\_event}\\
     \hline
   \end{tabular}
-  \caption{Permissions granted in groups.}
+  \caption{Groups of permissions which area always granted together if any are requested.}
   \label{table:permgroups}
 \end{table}
 
- All of the affected read and extended permissions are grouped in pairs, so if the developer requests one they receive the other. The write permissions, however, are in a group of eight: If a developer asks for one, they get the other seven as well. These are the only eight write permissions offered by the Facebook Connect API---that is, every site that attempts to request one write permission will get them all. %In contrast, there are about 48 read permissions and nine extended permissions that are not assigned in groups (an exact number for read permissions is hard to give because some permissions have become deprecated or are not listed in the documentation).
+All of the grouped read and extended permissions are in pairs, so if the developer requests one they receive the other.
+The write permissions, however, are in a group of eight, which in fact contains all write permissions offered by Facebook Connect. API---that is, every site that attempts to request one write permission will get them all. %In contrast, there are about 48 read permissions and nine extended permissions that are not assigned in groups (an exact number for read permissions is hard to give because some permissions have become deprecated or are not listed in the documentation).
 
 When we crawled the logins of the real sites, we recorded all of the permissions in the HTML in addition to those in the scope (which were requested by developers). Figure~\ref{figure:scopevshtml} shows the number of occurrences in the scope and in the HTML for each of the permissions that are granted in groups. It accounts for all 177 sites crawled with the current login format.  It is evident that many sites are being made to request more permissions than the developer specified, especially in the write permissions category. All permissions not listed in the table had the same number of occurrences in the scope and HTML, with the expected exception of \emph{public\_profile} and \emph{user\_friends} which are given by default.
 
