@@ -44,6 +44,9 @@ In particular, permissions that allow a site to post to the user's profile are g
 We evaluate how the requested permissions are presented to the user and find that, while users generally understand what data sites can read from their profile, they generally do not understand the many different things the sites can post.
 In the case of write permissions, we show that user expectations are influenced by the identity of the requesting site which in reality has no impact on what is enforced.
 We also find that users generally do not understand the way Facebook Connect permissions interact with Facebook's privacy settings.
+Our results suggest that users understand detailed, granular messages better than those that are broad and vague.
+%In order to protect users' privacy, Facebook should granularize the write permissions, present them to the user more distinctly, and make clear the way privacy settings are handled.
+
 % sentence about what the takeaway is. should fb do something? should users be more vigilent?
 
 % should we mention federated identity
@@ -661,7 +664,7 @@ When a developer designs their site to request certain permissions through Faceb
 
 The messages presented to the user for read permissions are reasonably clear---our survey showed that a majority of users understand what data they are providing access to. (However, they may be unaware that they are providing access to this information even if their privacy settings are set to private.)
 
-Write permissions, however, are much less clear. Facebook has ``simplified'' the write permissions process so that every site either gets all write permissions or none. Our survey shows that users do not understand the many things a site will be able to do to their profile if they authorize the vague message stating that the site ``would like to post to Facebook for you.'' Given the relative success with which users were able to identify the more distinct and well-defined read permissions, it appears users might actually understand write permissions better if they were split up.
+Write permissions, however, are much less clear. Facebook has ``simplified'' the write permissions process so that every site either gets all write permissions or none. Our survey shows that users do not understand the many things a site will be able to do to their profile if they authorize the vague message stating that the site ``would like to post to Facebook for you.'' In addition, users' interpretations of this message vary depending on the identity of the site they are logging in to although this actually has no impact on the permissions granted. Given the relative success with which users were able to identify the more distinct and well-defined read permissions, it appears users might actually understand write permissions better if they were split up.
 
 On April 30, 2014 Facebook announced an update to their Facebook Login system to be rolled out over the following months that allows users to reject individual permissions or log in anonymously \cite{newlogin}. While this is a big step forward, it appears there is still only one publishing permission and it is presented with the same vague message that our survey respondents had trouble understanding. However, it does provide even more specific details about read permissions. 
 
