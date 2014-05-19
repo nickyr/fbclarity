@@ -167,7 +167,7 @@ The approval page presented to the user has three hidden input HTML elements nam
 We confirmed with our test site that these permissions are actually granted and may be used by the reyling site, regardless of the requested permissions.
 %Further investigation indicates that these three elements hold all of the permissions that will be granted if the user clicks okay (and the scope variable in the URL does not).
 
-\begin{figure}[tb!]
+\begin{figure}[tb]
   \centering
   \def\arraystretch{1.3}
   \begin{tabular}{l}
@@ -192,8 +192,9 @@ We confirmed with our test site that these permissions are actually granted and 
   \label{figure:inputels}
 \end{figure}
 
-
-First, we confirmed that with every site cralwed the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they never appeared in the scope.
+We used these hidden elements to determine which permissions were granted in contrast to what was request for all 177 sites we crawled.
+Our results are shown in Figure~\ref{figure:scopevshtml}.
+First, we confirmed that with every site cralwed the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they were never requested.
 % unless explicitly requested by the developer. We verified this both in the test site and with the data from the sites we crawled: All 177 sites with the current login format had both permissions in the \emph{read} input element.
 
 In addition, we identified several requested permissions which always cause extra permissions to be granted along with them (these will be discussed in more detail in the Section~\ref{sec:developerdiffs}).
@@ -246,14 +247,18 @@ We noted that permissions which are always granted together are displayed to the
 \end{table}
 
 All of the grouped read and extended permissions are in pairs, so if the developer requests one they receive the other.
-The write permissions, however, are in a group of eight, which in fact contains all write permissions offered by Facebook Connect. API---that is, every site that attempts to request one write permission will get them all. %In contrast, there are about 48 read permissions and nine extended permissions that are not assigned in groups (an exact number for read permissions is hard to give because some permissions have become deprecated or are not listed in the documentation).
+The write permissions, however, are in a group of eight, which in fact contains all write permissions offered by Facebook Connect. Thus write permissions are in practice all-or-nothing.
+%API---that is, every site that attempts to request one write permission will get them all. %In contrast, there are about 48 read permissions and nine extended permissions that are not assigned in groups (an exact number for read permissions is hard to give because some permissions have become deprecated or are not listed in the documentation).
 
-When we crawled the logins of the real sites, we recorded all of the permissions in the HTML in addition to those in the scope (which were requested by developers). Figure~\ref{figure:scopevshtml} shows the number of occurrences in the scope and in the HTML for each of the permissions that are granted in groups. It accounts for all 177 sites crawled with the current login format.  It is evident that many sites are being made to request more permissions than the developer specified, especially in the write permissions category. All permissions not listed in the table had the same number of occurrences in the scope and HTML, with the expected exception of \emph{public\_profile} and \emph{user\_friends} which are given by default.
+%When we crawled the logins of the real sites, we recorded all of the permissions in the HTML in addition to those in the scope (which were requested by developers). 
+%The results of our crawl are shown in Figure~\ref{figure:scopevshtml}% shows the number of occurrences in the scope and in the HTML for each of the permissions that are granted in groups.
+%It accounts for all 177 sites crawled with the current login format.
+%It is evident that many sites are being made to request more permissions than the developer specified, especially in the write permissions category. All permissions not listed in the table had the same number of occurrences in the scope and HTML, with the expected exception of \emph{public\_profile} and \emph{user\_friends} which are given by default.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=8.5cm]{scope_vs_html_cosn}
-  \caption{Number of occurrences in the scope and in the HTML for permissions granted in groups. Those in the scope were requested by developers, those in the HTML would actually be given if approved by the user. The lines on the left designate the groups as listed in Table~\ref{table:permgroups}.}
+  \caption{Permissions requested vs.\ permissions granted for permissions granted in groups, as listed in Table~\ref{table:permgroups}.}
   \label{figure:scopevshtml}
 \end{figure}
 
@@ -262,7 +267,10 @@ When we crawled the logins of the real sites, we recorded all of the permissions
 \subsection{How permissions are presented to the user} 
 \label{sec:messages} 
 
-As mentioned previously, when the user logs in to a site with Facebook Connect they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions. These messages are algorithmically formed from the permissions present in the corresponding HTML input elements. We identified the phrase or word in the message that corresponds to each permission with our test site and verified the correspondences with the data from the 177 real sites. Most messages appear reasonably clear. However, the permissions that are always presented in groups (see Table~\ref{table:permgroups}) have one corresponding word or phrase in the message indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages, the corresponding groups of permissions being requested, and the meaning of the permissions according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
+As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
+We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
+Most messages appear reasonably clear.
+However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
 
 \begin{table*}[htb]
   \centering
@@ -298,27 +306,11 @@ As mentioned previously, when the user logs in to a site with Facebook Connect t
   \label{table:messagegrouped}
 \end{table*}
 
-\subsection{Discussion}
-\label{sec:investigationdiscussion}
-
-This section has explored the way a set of permissions is transformed from the time when the developer designs the site to request permissions to the point where the permissions are presented to the user for approval. The developer requests a certain set of permissions and then the Facebook Connect API may add additional permissions to that set because certain permissions are always granted in groups. These are the permissions that will be given to the site should the user approve them. When the user is asked for approval, they are presented with a message that can be broken down into pieces representing each permission or group of permissions.
-
-But does it actually make a difference that some permissions are grouped together in this way? Combining \emph{create\_event} and \emph{read\_event} and presenting them as ``manage your events'' seems reasonable, as does combining \emph{email} and \emph{contact\_email}, since it is unclear what the difference would be. Although the explanation of \emph{export\_stream} is not very clear, it appears reasonable to combine it with \emph{read\_stream}. The only obvious issue is that the documentation states that \emph{read\_stream} allows access to the News Feed and Wall \cite{fbpermissions}, whereas the message presented to the user says only ``News Feed.''
-
-Combining \emph{user\_about\_me} and \emph{user\_activities} and calling it ``personal description'' (as well as the similar combination of \emph{friends\_about\_me} and \emph{friends\_activities}), however, may be confusing. These two do not intuitively go together, and calling them ``personal description'' hides the presence of \emph{user\_activities}. Potentially the most confusing is the combination of all eight write permissions into one group that is presented as ``post to Facebook for you.'' Users are likely unaware of the many different things they are allowing the site to do to their profile by clicking okay. 
-
-%Ideally, the system would not be so convoluted. Only the permissions requested by the developer would ever be granted to the site, and all of these permissions would be presented to the user individually. This could make it much easier for users to understand what permissions they are granting a site when they log in. 
-
-Grouping permissions may also discourage people from using Facebook Connect. The Facebook Connect documentation itself states that developers should ``only ask for the permissions that are essential to an app [or site]'' \cite{fbpermsinstructions}. Their research has demonstrated that ``the more permissions an app requests, the less likely it is that people will use Facebook to log into [that] app.'' But since Facebook Connect often requests more permissions than the developer intended to (even just by always requesting \emph{public\_profile} and \emph{user\_friends}), the developer has no choice but to request unnecessary permissions. %Even forcing every site to request the \emph{public\_profile} and \emph{user\_friends} permissions is too much: For many login implementations, the site may need nothing more than a way to identify the user, such as by an email address or an id number. In such cases, the default permissions are unnecessary and may deter people from using the Facebook Connect system.
-
-It appears that the reason that all write permissions are presented together is that Facebook has decided to eliminate the distinction between different types of publishing. The description in the documentation for \emph{publish\_actions} is ``publish my app activity to Facebook'' and the description for \emph{publish\_stream} is ``publish content to my Wall'' \cite{fbpermissions}. These are quite vague, and seem as though they could encompass nearly anything. A blog post from a Facebook employee \cite{publishperms} helps explain these permissions: They are essentially the same thing (and are being merged into one) and allow a site to do any type of publishing to Facebook. The post mentions that they can be used to upload a photo, which one may have suspected required the \emph{photo\_upload} permission. Another post from a Facebook employee mentions that developers should only request \emph{publish\_actions} because it encompasses all other write permissions in an effort to ``simplify the model'' \cite{clarity}. Furthermore, Facebook's Graph API lists \emph{publish\_actions} as the permission needed for all API calls that involve publishing \cite{fbapi}.
-
-This transition towards only one type of publishing is visible to anyone who has used Facebook for several years: updating one's status and uploading a photo used to be distinct actions, but now they are both performed by creating a post on one's Timeline. The read and extended permissions that are presented in groups may stem from similar changes in Facebook's structure and it may no longer be possible to separate them. However, these changes may make the Facebook Connect authentication process less clear to users. Section~\ref{sec:understanding} will explore whether they do.
-
 \subsection{Facebook's response}
 \label{sec:fbresponse}
 
-We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{The full correspondence with Facebook Security is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' We decided to test whether all-or-nothing write permissions are in fact easier for the user to understand.
+We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{The full correspondence with Facebook Security is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
+This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand, which we turn to in the next section.
 
 
 \section{Users' understanding of permissions}
@@ -550,6 +542,31 @@ Our studies indicate that users have a decent understanding of read permissions 
 Facebook has attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy \cite{fbpolicy}. 
 
 Although our first set of surveys and Egelman's study \cite{egelman} indicated that read permissions are understood decently well, our final study suggests that these results may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses). A future study could test this comprehensively.
+
+\subsection{Evolution of the system}
+\label{sec:investigationdiscussion}
+
+\begin{comment}
+This section has explored the way a set of permissions is transformed from the time when the developer designs the site to request permissions to the point where the permissions are presented to the user for approval. The developer requests a certain set of permissions and then the Facebook Connect API may add additional permissions to that set because certain permissions are always granted in groups. These are the permissions that will be given to the site should the user approve them. When the user is asked for approval, they are presented with a message that can be broken down into pieces representing each permission or group of permissions.
+
+But does it actually make a difference that some permissions are grouped together in this way? Combining \emph{create\_event} and \emph{read\_event} and presenting them as ``manage your events'' seems reasonable, as does combining \emph{email} and \emph{contact\_email}, since it is unclear what the difference would be. Although the explanation of \emph{export\_stream} is not very clear, it appears reasonable to combine it with \emph{read\_stream}. The only obvious issue is that the documentation states that \emph{read\_stream} allows access to the News Feed and Wall \cite{fbpermissions}, whereas the message presented to the user says only ``News Feed.''
+
+Combining \emph{user\_about\_me} and \emph{user\_activities} and calling it ``personal description'' (as well as the similar combination of \emph{friends\_about\_me} and \emph{friends\_activities}), however, may be confusing. These two do not intuitively go together, and calling them ``personal description'' hides the presence of \emph{user\_activities}. Potentially the most confusing is the combination of all eight write permissions into one group that is presented as ``post to Facebook for you.'' Users are likely unaware of the many different things they are allowing the site to do to their profile by clicking okay. 
+\end{comment}
+
+%Ideally, the system would not be so convoluted. Only the permissions requested by the developer would ever be granted to the site, and all of these permissions would be presented to the user individually. This could make it much easier for users to understand what permissions they are granting a site when they log in. 
+
+Grouping permissions appears contrary to Facebook's stated advice to developers that they should ``only ask for the permissions that are essential to an app [or site]'' \cite{fbpermsinstructions}.
+Because Facebook Connect often grants more permissions than the developer requested (even just by always granting \emph{public\_profile} and \emph{user\_friends}), the developer has no choice but to receive unnecessary permissions.
+In some cases, this appears to be a harmless artifact of the API's evolution.
+For example, two permissions for reading an email address exist (\emph{email} and \emph{contact\_email}) and grouping them seems sensible. %Even forcing every site to request the \emph{public\_profile} and \emph{user\_friends} permissions is too much: For many login implementations, the site may need nothing more than a way to identify the user, such as by an email address or an id number. In such cases, the default permissions are unnecessary and may deter people from using the Facebook Connect system.
+
+It appears that the reason that all write permissions are presented together is that Facebook has decided to eliminate the distinction between different types of publishing. The description in the documentation for \emph{publish\_actions} is ``publish my app activity to Facebook'' and the description for \emph{publish\_stream} is ``publish content to my Wall'' \cite{fbpermissions}. These are quite vague, and seem as though they could encompass nearly anything. A blog post from a Facebook employee \cite{publishperms} helps explain these permissions: They are essentially the same thing (and are being merged into one) and allow a site to do any type of publishing to Facebook. The post mentions that they can be used to upload a photo, which one may have suspected required the \emph{photo\_upload} permission. Another post from a Facebook employee mentions that developers should only request \emph{publish\_actions} because it encompasses all other write permissions in an effort to ``simplify the model'' \cite{clarity}. Furthermore, Facebook's Graph API lists \emph{publish\_actions} as the permission needed for all API calls that involve publishing \cite{fbapi}.
+
+This transition towards only one type of publishing is visible to anyone who has used Facebook for several years: updating one's status and uploading a photo used to be distinct actions, but now they are both performed by creating a post on one's Timeline. The read and extended permissions that are presented in groups may stem from similar changes in Facebook's structure and it may no longer be possible to separate them. However, these changes may make the Facebook Connect authentication process less clear to users. Section~\ref{sec:understanding} will explore whether they do.
+
+Facebook's own research has demonstrated that ``the more permissions an app requests, the less likely it is that people will use Facebook to log into [that] app''\cite{fbpermsinstructions}.
+
 
 \subsection{Limitations}
 \label{sec:limitations}
