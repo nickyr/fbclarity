@@ -43,7 +43,7 @@ We show that more permissions can be granted than the developer intended.
 In particular, permissions that allow a site to post to the user's profile are granted on an all-or-nothing basis.
 We evaluate how the requested permissions are presented to the user and find that, while users generally understand what data sites can read from their profile, they generally do not understand the many different things the sites can post.
 In the case of write permissions, we show that user expectations are influenced by the identity of the requesting site which in reality has no impact on what is enforced.
-We also find thar users generally do not understand the way Facebook Connect permissions interact with Facebook's privacy settings.
+We also find that users generally do not understand the way Facebook Connect permissions interact with Facebook's privacy settings.
 % sentence about what the takeaway is. should fb do something? should users be more vigilent?
 
 % should we mention federated identity
@@ -155,7 +155,7 @@ oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
 \restylefloat{figure}
 \subsection{Granted permissions}
 
-Facebook receives the requested permissions and translates them into a set of granted permissions which may exclude requested permissions which are deprecated or in some cases add additional permisions. 
+Facebook receives the requested permissions and translates them into a set of granted permissions which may exclude requested permissions which are deprecated or in some cases add additional permissions. 
 %In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
 Two permissions are always added regardless of what is requested which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}. These are \emph{public\_profile}, which gives access to the user's public profile, and \emph{user\_friends}, which gives access to the user's friends list. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
 
@@ -165,7 +165,7 @@ Two permissions are always added regardless of what is requested which Facebook 
 %The Facebook documentation does not say how a user presented with a message asking them to authorize permissions can identify the exact permissions being requested---they have only the message presented to them. But to understand how Facebook handles permissions, we need to know exactly which permissions will be granted if the user clicks okay. 
 
 The approval page presented to the user has three hidden input HTML elements named \emph{read}, \emph{write}, and \emph{extended} whose values are the granted permissions (see Figure~\ref{figure:inputels}).
-We confirmed with our test site that these permissions are actually granted and may be used by the reyling site, regardless of the requested permissions.
+We confirmed with our test site that these permissions are actually granted and may be used by the relying site, regardless of the requested permissions.
 %Further investigation indicates that these three elements hold all of the permissions that will be granted if the user clicks okay (and the scope variable in the URL does not).
 
 \begin{figure}[tb]
@@ -195,7 +195,7 @@ We confirmed with our test site that these permissions are actually granted and 
 
 We used these hidden elements to determine which permissions were granted in contrast to what was request for all 177 sites we crawled.
 Our results are shown in Figure~\ref{figure:scopevshtml}.
-First, we confirmed that with every site cralwed the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they were never requested.
+First, we confirmed that with every site crawled the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they were never requested.
 % unless explicitly requested by the developer. We verified this both in the test site and with the data from the sites we crawled: All 177 sites with the current login format had both permissions in the \emph{read} input element.
 
 In addition, we identified several requested permissions which always cause extra permissions to be granted along with them (these will be discussed in more detail in the Section~\ref{sec:developerdiffs}).
@@ -496,7 +496,7 @@ The null hypothesis can be rejected for ``update your status'' with $p < .04$ an
 %\textbf{TODO: Should this be moved to discussion?} It appears that users' perception of the write permissions message is influenced by the site identity for some permissions. This further highlights the vagueness of the message---although it means the same thing for every site, users think it means something different on different sites.
 
 
-\subsection{Infleunce of privacy settings}
+\subsection{Influence of privacy settings}
 \label{sec:privacysurvey}
 
 In one pilot survey of the free response format, a respondent stated that the site would gain access to only a limited number of permissions because their Facebook settings prevented them from accessing the rest. This suggests a lack of understanding of how the read permissions work: A site can access nearly everything that is public with only the \emph{public\_profile} permission \cite{fbprivacyfaq}. By granting the site additional permissions, a user is giving the site permission to access that information regardless of the user's privacy settings. (Using the test site, we confirmed that we could see all user photo albums regardless of their privacy settings with the \emph{user\_photos} permission.)
