@@ -82,8 +82,6 @@ We will explore both questions in this paper and show that:
   \label{figure:messageexample}
 \end{figure*}
 
-
-
 \begin{itemize}
   \item Facebook Connect sometimes asks the user to authorize more permissions than the developer intended to request.
   \item Write permissions are granted to sites on an all-or-nothing basis. For example, if a site wants to update the user's status, it must also gain permission to upload photos.
@@ -93,7 +91,7 @@ We will explore both questions in this paper and show that:
 \end{itemize}
 
 \section{Implementation of Facebook Connect permissions}
-
+\label{sec:implementation}
 The first step in determining whether the permissions system provides users with effective control is understanding which permissions are actually being granted when a given authorization message is displayed.
 Facebook Connect's process of a site requesting permissions from a user can be broken down into three steps:
 
@@ -266,15 +264,6 @@ The write permissions, however, are in a group of eight, which in fact contains 
 \end{figure}
 
 %The significance of Facebook giving these permissions in groups will be discussed after discussing the way Facebook presents them to the user.
-
-\subsection{How permissions are presented to the user} 
-\label{sec:messages} 
-
-As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
-We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
-Most messages appear reasonably clear.
-However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
-
 \begin{table*}[htb]
   \centering
   \begin{tabular}{|l|l|l|}
@@ -308,52 +297,64 @@ However, the grouped permissions (see Table~\ref{table:permgroups}) are displaye
   \caption{Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagegrouped}
 \end{table*}
+\subsection{How permissions are presented to the user} 
+\label{sec:messages} 
+
+As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
+We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
+Most messages appear reasonably clear.
+However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
+
 
 \subsection{Facebook's response}
 \label{sec:fbresponse}
 
-We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{The full correspondence with Facebook Security is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
+We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{Our full correspondence with Facebook is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
 This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand, which we turn to in the next section.
 
 
-\section{Users' understanding of permissions}
+\section{User understanding}
 \label{sec:understanding}
 
-Previous research  by Egelman \cite{egelman} found that 88\% of users have a general understanding of Facebook permissions; however, he studied only the read permissions dialogues. The results of our investigation of Facebook Connect indicate that confusion is more likely to arise with the write permissions since they are all grouped together and presented with a vague message. To test this and other aspects of user comprehension, we conducted three studies:
+The second critical component in effective user control on Facebook Connect is users' comprehension of the messages describing the permissions they're asked to approve.
+This is especially important given our findings in Section~\ref{sec:implementation} that all write permissions are grouped together and displayed with a single somewhat-vague message. 
+Previous research  by Egelman \cite{egelman} found that 88\% of users have a general understanding of Facebook's read permissions dialogs; however, he studied only the read permissions dialogues.
+To our knowledge this is the first study evaluating comprehension of write permissions.
+Together with read permissions these make a fascinating natural experiment: are users better able to understand granular (but complicated) read permissions, or simpler (but vaguer) write permissions?
+To test this and other aspects of user comprehension, we ultimately conducted three studies:
 
 \begin{enumerate}
-  \item One study tested general comprehension of read and write permissions and compares them to each other (see Section~\ref{sec:comparisonsurvey}).\footnote{Extended permissions were not tested since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested extended permissions).} 
+  \item One study tested general comprehension of read and write permissions and compares them to each other (see Section~\ref{sec:comparisonsurvey}).\footnote{We decided not to test extended permissions since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested them).} 
   \item One study tested how site identity affects interpretation of the write permissions message (see Section~\ref{sec:multisite}).
-  \item Our final study tested to see if users understand that they are giving up data regardless of their profile privacy settings (see Section~\ref{sec:privacysurvey}).
+  \item Our final study tested to see if users understand that they are giving access to data regardless of their profile privacy settings (see Section~\ref{sec:privacysurvey}).
 \end{enumerate}
 
 \subsection{Methodology}
 
-We conducted several surveys on Amazon's Mechanical Turk, a service where workers can be paid to complete simple online tasks. This allowed a large and reasonably diverse response pool for little cost. (See Section~\ref{sec:limitations} for a discussion of limitations.)
+We conducted our surveys using Amazon Mechanical Turk, a service where workers can be paid to complete simple online tasks. This allowed a large and reasonably diverse response pool for little cost (see Section~\ref{sec:limitations} for a discussion of its limitations).
+All of our surveys took the basic format of present users with real dialogs that they might see when logging in to a site using Facebook Connect and asking questions about what actions that site may take if they authorize the login.
 
-The basic format of our surveys is to present users with messages that they might see when logging in to a site using Facebook Connect and test whether they understand what permissions they are giving access to by authorizing the login. 
 
-
-\subsubsection{Pilots}
+\subsubsection{Pilot studies}
 
 We piloted three different methods of testing user comprehension. After verifying that the respondent had seen a Facebook Connect login, all pilots began by presenting the respondent with either a read or write permissions message that they might see when using Facebook Connect. No respondents were presented with both to ensure that no one got the two questions mixed up.
-
 Respondents were then presented with one of the following three question types:
 
 \begin{enumerate}  
-  \item A yes or no question asking if the site would be able to do something if they clicked okay, such as view their photos or update their status.
+  \item A yes/no question asking if the site would be able to do something if they clicked okay, such as view their photos or update their status.
   \item A list of things the site might be able to do if they clicked okay. The user was asked to select all those they thought the site would be able to do.
-  \item A free response question asking the user to describe what information they thought the site would be able to see on their profile or what it would be able to do to their profile if they clicked okay.
+  \item A free response question asking the user to describe what information they thought the site would be able to do if they clicked okay.
 \end{enumerate}
 
-The free response question would be the ideal way to test user understanding because the other two options prompt the user with ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answer. (While this may be representative of how much users pay attention to messages when they log in to sites, it is not useful for this survey.) There was no noticeable difference in responses between the yes or no questions and the multiple-selection questions, so we chose the multiple-selection format to get results about more permissions.
+The free response question has the advantage of not prompting the user with any ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answer. While this may be reflect how users pay little attention to permissions messages in real life when they log in to sites, it is not useful for this survey.
+There was no noticeable difference in responses between the yes/no questions and the multiple-selection questions, so we chose the latter to get results about more permissions.
 
-We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. In order to separate our manipulated variables and provide a direct comparison between results, we conducted two different surveys: One survey (Section~\ref{sec:comparisonsurvey} used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
+We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. To keep our independent variables separate, we conducted two different surveys. The first survey (Section~\ref{sec:comparisonsurvey} used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
 
-\subsection{Read versus write permissions survey}
+\subsection{Read vs.\ write permissions}
 \label{sec:comparisonsurvey}
 
-Our first study tests general comprehension of read and write permissions in such a way that they can be directly compared. For all questions, we used the site name ``Hooli.com'' to eliminate the site name as a variable. The null hypotheses that will be tested are as follows:
+Our first study tests general comprehension of read and write permissions in such a way that they can be directly compared. For all questions, we used the site name ``Hooli.com'' to eliminate the site name as a variable. Our tests were designed to evaluate the the following null hypotheses:
 
 \begin{enumerate}
   \item Respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing.
@@ -361,22 +362,22 @@ Our first study tests general comprehension of read and write permissions in suc
   \item Respondents' ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing.
 \end{enumerate}
 
-This survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey to avoid confusion that may have arisen due to only seeing the login dialogues out of context.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}. 
+This survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey and were excluded from analysis, but were still paid for their participation.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}. 
 
-The other half were presented with read permissions questions. Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}). All were renamed ``Hooli.com'' Each message was followed with eight or nine options for things the site might be able to do. Four or five options were information on a Facebook profile that the site would be able to see. The other four were either things the site could not see or were write or extended permissions.\footnote{It is difficult to determine what the site cannot see since the user's public profile could contain a lot of information if they have relaxed privacy settings, so only very clear-cut things like seeing private messages could be used.} Again, the incorrect answers were only so the respondent did not have to select all options to be correct. The four different questions can be seen in Appendix~\ref{appendix:readsurveys}. There are too many different read permissions to effectively test them all without exhausting the respondents with too many questions, so the ones tested are some of the more common ones.
+The other half were presented with read permissions questions. Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}). All were renamed ``Hooli.com.'' Each message was followed with eight or nine options for things the site might be able to do. Four or five options were information on a Facebook profile that the site would be able to see. The other four were either things the site could not see or were write or extended permissions.\footnote{It is difficult to determine what the site cannot see since the user's public profile could contain a lot of information if they have relaxed privacy settings, so only very clear-cut things like seeing private messages could be used.} Again, the incorrect answers were only so the respondent did not have to select all options to be correct. The four different questions can be seen in Appendix~\ref{appendix:readsurveys}. There are too many different read permissions to effectively test them all without exhausting the respondents with too many questions, so the ones tested are some of the more common ones.
 
 \subsubsection{Read permissions results}
 
 Figure~\ref{figure:readpercents} illustrates the percentage of people who correctly identified that each permission would be given to the requesting site after they clicked okay.\footnote{Only the real permissions being requested are presented. The incorrect answers we made up are not.} Table~\ref{table:readstats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified a permission as being requested to the expected value with random guessing: half of the total number of people who were presented with that permission.
 
-\begin{figure}[h!]
+\begin{figure}[tbh!]
   \centering
   \includegraphics[width=8.5cm]{read_percents_cosn}
-  \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization.}
+  \caption{Percentage of people who correctly identified that each read permission would be granted to the site upon authorization.}
   \label{figure:readpercents}
 \end{figure}
 
-\begin{table}[h!]
+\begin{table}[tbh!]
   \centering
   \begin{tabular}{|l|l|l|l|}
     \hline
@@ -397,28 +398,29 @@ Figure~\ref{figure:readpercents} illustrates the percentage of people who correc
     \begin{tabular}[c]{@{}l@{}}see what language you\\ speak\end{tabular}         & 79 & 63.29                                 & 0.024               \\ \hline
     \begin{tabular}[c]{@{}l@{}}see what country you\\ live in\end{tabular}        & 79 & 65.82                                 & 0.007              \\ \hline
   \end{tabular}
-  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked.} % should I be putting numbers in this table instead of %?
+  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to a null hypothesis of random guessing.} % should I be putting numbers in this table instead of %?
   \label{table:readstats}
 \end{table}
 
 For all tested read permissions, over half of people correctly identified that said permission would be granted based on the message presented. On average, individual permissions were correctly identified 79.72\% of the time. This is comparable to Egelman's \cite{egelman} conclusion that 88\% of users understand generally which permissions are being requested.
 
-The null hypothesis (that respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing) can be rejected for all but two permissions with $p < .01$. This suggests users have a significantly better understanding of which read permissions they are granting than if they were randomly guessing.\footnote{It is not the case that users simply marked every survey option as visible to the website: an average of 81.96\% of users correctly identified each of the options that would not be visible to the site. The null hypothesis for each of these options can be rejected with $p < .01$.}
+The null hypothesis (that respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing) can be rejected for all but two permissions with $p < .01$,  suggesting that users have a significantly better understanding of which read permissions they are granting than if they were randomly guessing.
+We can also reject the possibility that users simply marked every survey option as visible to the website: an average of 81.96\% of users correctly identified each of the options that would not be visible to the site. The null hypothesis for each of these options can be rejected with $p < .01$.
 
-The null hypothesis for ``see what language you speak'' can be rejected with $p < .03$ and for ``see your wall'' with $p < .05$. A G-test shows that respondents were worse at identifying ``see your wall'' than ``see your status updates'' (which had an accuracy rate roughly equal to the average) with $p < .04$ and a G-test statistic of 4.528. Recall that seeing one's Wall and seeing one's News Feed are both granted by the \emph{read\_stream} permission but the message presented to the user says only ``News Feed'' (see Section~\ref{sec:investigationdiscussion}). This may have been the cause of some confusion. Respondents were also worse at identifying ``see what language you speak'' with $p < .04$ and a G-test statistic of 4.338, but the reason for this is unclear.
+The null hypothesis for ``see what language you speak'' can be rejected with $p < .03$ and for ``see your wall'' with $p < .05$. A $G$-test\footnote{The $G$-test is a likelihood-ratio statistical test of independence applicable in the same cases as a $\chi^2$-test, but with lower approximation error in nearly all cases than the more traditional Pearson's $\chi^2$-test.} shows that respondents were worse at identifying ``see your wall'' than ``see your status updates'' (which had an accuracy rate roughly equal to the average) with $p < .04$ and a $G$-test statistic of 4.528. Recall that seeing one's Wall and seeing one's News Feed are both granted by the \emph{read\_stream} permission but the message presented to the user says only ``News Feed'' (see Section~\ref{sec:investigationdiscussion}). This may have been the cause of some confusion. Respondents were also worse at identifying ``see what language you speak'' with $p < .04$ and a $G$-test statistic of 4.338, but the reason for this is unclear.
 
 \subsubsection{Write permissions results}
 
 Figure~\ref{figure:writepercents} illustrates the percentage of people who correctly identified that each permission would be given to the requesting site after they clicked okay. Table~\ref{table:writestats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified a permission as being requested to the expected value with random guessing: half of the total number of people who were presented with that permission.
 
-\begin{figure}[h!]
+\begin{figure}[tbh!]
   \centering
   \includegraphics[width=8.5cm]{write_percents_cosn}
   \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization.}
   \label{figure:writepercents}
 \end{figure}
 
-\begin{table}[h!]
+\begin{table}[tbh!]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -432,7 +434,7 @@ Figure~\ref{figure:writepercents} illustrates the percentage of people who corre
     share items with others          & 34.88         & 0.000       \\ \hline
     publish content to your wall     & 55.81         & 0.050      \\ \hline
   \end{tabular}
-  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked. N = 301.} 
+  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each permission to an expected value of half the total number of people asked. $N$ = 301.} 
   \label{table:writestats}
 \end{table}
 
@@ -442,26 +444,26 @@ The \emph{p}-value for ``publish app activity to Facebook'' is too high to rejec
 
 Over half of people correctly identified that the site would be able to ``publish content to [their] wall,'' and the null can be rejected with $p < .05$. People may have a better idea that this permission is being granted than if they were randomly guessing. 
 
-Worth noting is that the two permissions people did best with (``publish content to your wall'' and ``publish app activity to Facebook'') are also the vaguest. (These are the \emph{publish\_stream} and \emph{publish\_actions} permissions that are intended to give nearly all publishing permissions.) Because they are so vague, the fact the more people selected them correctly probably does not mean that they understand the specific things the site can post on their profile---they include the functions of the other permissions, which most users were not successful at identifying.
+Worth noting is that the two permissions people did best with (``publish content to your wall'' and ``publish app activity to Facebook'') are also the vaguest. (These are the \emph{publish\_stream} and \emph{publish\_actions} permissions that are intended to give nearly all publishing permissions.) Because they are so vague, the fact the more people selected them correctly probably does not mean that they fully understand the specific things the site can post on their profile---they include the functions of the other permissions, which most users were not successful at identifying.
 
 \subsubsection{Comparison}
 
 It is evident at this point that users understand read permissions messages significantly better than they understand write permissions messages: Respondents correctly identified whether a read permission would be granted 79.72\% of the time, whereas write permissions were only correctly identified 25.91\% of the time.
 
-We assigned a ranking to each respondent based on the percentage of permissions they correctly identified\footnote{This counts only the real permissions that will actually be granted and not the incorrect options since we made those up.} and separated them into two groups, one for those asked about read permissions and one for those asked about write permissions.  A Mann-Whitney U test of these two groups allows us to reject the null hypothesis that respondents’ ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing with $p < 0.001$ and a test statistic of 9163.0.
+We assigned a ranking to each respondent based on the percentage of permissions they correctly identified\footnote{This counts only the real permissions and not the incorrect options since those were artificially created.} and separated them into two groups, one for those asked about read permissions and one for those asked about write permissions.  A Mann-Whitney U test of these two groups allows us to reject the null hypothesis that respondents’ ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing with $p < 0.001$ and a test statistic of 9163.0.
 
-\subsection{Write permissions survey across different sites}
+\subsection{Influence of relying site}
 \label{sec:multisite}
 
 As previously mentioned, our pilot surveys indicated that the site identity may influence how people interpret the write permissions message. We performed a separate survey with 300 Mechanical Turk workers to test this. The format of the survey was identical to the write permissions questions in the first survey and we provided the same options for the user to select. However, instead of using ``Hooli.com'' as the website in question, one third of respondents were presented with \emph{Flickr.com} (a photo and video sharing site), one third with \emph{TripAdvisor.com} (a travel site), and one third with \emph{iFlikeU.com} (an anonymous messaging site). (Since there is only one write permissions message, the message presented to the user in all cases was identical aside from the site name and description.)
 
-The results of this survey can be statistically analyzed with a G-test to see if the number of respondents who thought each permission would be granted varied across the four sites (the three mentioned here plus the data from ``Hooli.com'' from the first survey). The null hypothesis is that the site identity does not affect how many people think a given permission is being requested.
+The results of this survey can be statistically analyzed with a $G$-test to see if the number of respondents who thought each permission would be granted varied across the four sites (the three mentioned here plus the data from ``Hooli.com'' from the first survey). The null hypothesis is that the site identity does not affect how many people think a given permission is being requested.
 
 \subsubsection{Results}
 
-Figure~\ref{figure:multipercents} illustrates the percentage of people who correctly identified that each permission would be given to each site after they clicked okay. Table~\ref{table:multistats} lists the numerical percentages as well as the \emph{p}-values from a G-test comparing the variation in number of correct selections for each permission across all four sites.
+Figure~\ref{figure:multipercents} illustrates the percentage of people who correctly identified that each permission would be given to each site after they clicked okay. Table~\ref{table:multistats} lists the numerical percentages as well as the \emph{p}-values from a $G$-test comparing the variation in number of correct selections for each permission across all four sites.
 
-\begin{figure}[h!]
+\begin{figure}[tbh!]
   \centering
   \includegraphics[width=8.5cm]{multi_percents_cosn}
   \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization for four sites.}
@@ -472,8 +474,8 @@ Figure~\ref{figure:multipercents} illustrates the percentage of people who corre
   \centering
   \begin{tabular}{|l|l|l|l|l|l|l|}
     \hline
-    \multirow{2}{*}{\textbf{Permission}} & \multicolumn{4}{l|}{\textbf{Percent Correct}}                                                                                                                                                                                                             & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}G-test\\ statistic\end{tabular}}} & \multirow{2}{*}{\textbf{p-value}} \\ \cline{2-5}
-    & \begin{tabular}[c]{@{}l@{}}Flickr \\ (N = 100)\end{tabular} & \begin{tabular}[c]{@{}l@{}}TripAdvisor \\ (N = 93)\end{tabular} & \begin{tabular}[c]{@{}l@{}}iFlikeU \\ (N = 102)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Hooli \\ (N = 301)\end{tabular} &                                                                                      &                                   \\ \hline\hline
+    \multirow{2}{*}{\textbf{Permission}} & \multicolumn{4}{l|}{\textbf{Percent Correct}}                                                                                                                                                                                                             & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}$G$-test\\ statistic\end{tabular}}} & \multirow{2}{*}{\textbf{p-value}} \\ \cline{2-5}
+    & \begin{tabular}[c]{@{}l@{}}Flickr \\ ($N$ = 100)\end{tabular} & \begin{tabular}[c]{@{}l@{}}TripAdvisor \\ ($N$ = 93)\end{tabular} & \begin{tabular}[c]{@{}l@{}}iFlikeU \\ ($N$ = 102)\end{tabular} & \begin{tabular}[c]{@{}l@{}}Hooli \\ ($N$ = 301)\end{tabular} &                                                                                      &                                   \\ \hline\hline
     update your status                   & 34                                                          & 20.43                                                           & 24.51                                                        & 34.88                                                      & 8.662                                                                                & 0.034                             \\ \hline
     publish app activity to Facebook     & 64                                                          & 51.61                                                           & 35.29                                                        & 45.85                                                      & 16.733                                                                               & 0.001                             \\ \hline
     add and modify photos                & 22                                                          & 7.53                                                            & 4.90                                                         & 8.64                                                       & 15.185                                                                               & 0.002                             \\ \hline
@@ -483,7 +485,7 @@ Figure~\ref{figure:multipercents} illustrates the percentage of people who corre
     share items with others              & 31                                                          & 32.26                                                           & 30.39                                                        & 34.88                                                      & 0.706                                                                                & 0.872                             \\ \hline
     publish content to your wall         & 65                                                          & 53.76                                                           & 44.12                                                        & 55.81                                                      &    8.208                                                                                  & 0.042                             \\ \hline
   \end{tabular}
-  \caption{\emph{p}-values for G-test comparing the number of people who correctly selected each permission across four sites.}
+  \caption{\emph{p}-values for $G$-test comparing the number of people who correctly selected each permission across four sites.}
   \label{table:multistats}
 \end{table*}
 
@@ -494,14 +496,14 @@ The null hypothesis can be rejected for ``update your status'' with $p < .04$ an
 %\textbf{TODO: Should this be moved to discussion?} It appears that users' perception of the write permissions message is influenced by the site identity for some permissions. This further highlights the vagueness of the message---although it means the same thing for every site, users think it means something different on different sites.
 
 
-\subsection{Privacy levels survey}
+\subsection{Infleunce of privacy settings}
 \label{sec:privacysurvey}
 
 In one pilot survey of the free response format, a respondent stated that the site would gain access to only a limited number of permissions because their Facebook settings prevented them from accessing the rest. This suggests a lack of understanding of how the read permissions work: A site can access nearly everything that is public with only the \emph{public\_profile} permission \cite{fbprivacyfaq}. By granting the site additional permissions, a user is giving the site permission to access that information regardless of the user's privacy settings. (Using the test site, we confirmed that we could see all user photo albums regardless of their privacy settings with the \emph{user\_photos} permission.)
 
-We created a short survey and collected responses from 100 Mechanical Turk workers to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. (The correct answer is all three.) The survey can be seen in Appendix~\ref{appendix:readsurvey2}.
+We surveyed 100 additional Mechanical Turk respondents to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. (The correct answer is all three.) The survey can be seen in Appendix~\ref{appendix:readsurvey2}.
 
-This question can also be statistically tested against random guessing. The null hypothesis is that respondents' ability to identify which privacy levels they are authorizing to be viewed is no different than if they were randomly guessing. We will also test the hypothesis that users are equally likely to identify that data could be read regardless of its privacy setting
+This question can also be statistically tested against random guessing. The null hypothesis is that users are equally likely to identify that data could be read regardless of its privacy setting.
 
 \subsubsection{Results}
 
@@ -509,14 +511,14 @@ This question can also be statistically tested against random guessing. The null
 
 Figure~\ref{figure:privacypercents} illustrates the percentage of people who correctly identified that Imgur.com would be able to see their photo albums with various privacy settings if they clicked okay. Table~\ref{table:privacystats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified that a privacy level was visible to the expected value with random guessing: half of the total number of people who were given the survey.
 
-\begin{figure}[h!]
+\begin{figure}[tbh!]
   \centering
   \includegraphics[width=8.5cm]{privacy_percents_cosn}
   \caption{Percentage of people who correctly identified that Imgur.com would be able to see their photo albums of each privacy level upon authorization.}
   \label{figure:privacypercents}
 \end{figure}
 
-\begin{table}[h!]
+\begin{table}[tbh!]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -525,11 +527,11 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
     \begin{tabular}[c]{@{}l@{}}those marked as visible \\to friends\end{tabular}    & 33.33         & 0.001           \\ \hline
     \begin{tabular}[c]{@{}l@{}}those marked as visible \\to only me\end{tabular}    & 22.22         & 0.000      \\ \hline
   \end{tabular}
-  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to an expected value of half the total number of people asked. N = 99.} 
+  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to an expected value of half the total number of people asked. $N$ = 99.} 
   \label{table:privacystats}
 \end{table}
 
-For each privacy setting, the null hypothesis (that respondents’ ability to identify which privacy levels they are authorizing to be viewed is no different than if they were randomly guessing) can be rejected with $p < .01$. The hypothesis that users are equally likely to identify that data can be seen regardless of its privacy setting can be rejected with a G-test $p < .001$ and a G-test statistic of 88.342. It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
+For each privacy setting tested, the null hypothesis that users are equally likely to identify that data can be seen regardless of its privacy setting can be rejected with a $G$-test $p < .001$ and a $G$-test statistic of 88.34. It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
 
 
 \subsection{Limitations}
@@ -539,9 +541,9 @@ There are several possible limitations to our surveys:
 
 \begin{itemize}
   \item As discussed previously, by giving respondents several options to select we suggested possible things the site could do that may not have occurred to them otherwise. In addition, in order to respond to our questions they may have paid more attention to the permissions dialogues than they normally would have. As a result, our survey may indicate that users are more aware of what permissions are being requested than they are in practice.
-  \item If read and write permissions are fundamentally different in some non-obvious way, it may be invalid to compare understanding of read permissions to understanding of write permissions. It is possible that users would understand write permissions even more poorly if they were not all-or-nothing.
-  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States. Our choice of Mechanical Turk is justified by Goodman, Cryder, and Cheema's finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree.
-  \item We had to make up permissions that are not actually granted upon authorization so users did not have to select every option to be correct. If we did a poor job, this could have influenced results. We did not count these made up permissions in our statistical analysis for this reason.
+  \item If read and write permissions are fundamentally different in some non-obvious way, it may be invalid to compare understanding of read permissions to understanding of write permissions. It is possible that users would understand write permissions even more poorly if they were presented granularly rather than all-or-nothing.
+  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States. Our use of Mechanical Turk is justified by previous research finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree. In addition, users are known to pay little attention to permissions messages in practice~\cite{egelman}.
+  \item We had to make up permissions that are not actually granted upon authorization so users did not have to select every option to be correct. If we did a poor job, this could have influenced results by distracting or unsettling users. We did not count these made up permissions in our statistical analysis for this reason.
 \end{itemize}
 
 
