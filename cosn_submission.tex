@@ -532,6 +532,19 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
 For each privacy setting, the null hypothesis (that respondents’ ability to identify which privacy levels they are authorizing to be viewed is no different than if they were randomly guessing) can be rejected with $p < .01$. The hypothesis that users are equally likely to identify that data can be seen regardless of its privacy setting can be rejected with a G-test $p < .001$ and a G-test statistic of 88.342. It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
 
 
+\subsection{Limitations}
+\label{sec:limitations}
+
+There are several possible limitations to our surveys:
+
+\begin{itemize}
+  \item As discussed previously, by giving respondents several options to select we suggested possible things the site could do that may not have occurred to them otherwise. In addition, in order to respond to our questions they may have paid more attention to the permissions dialogues than they normally would have. As a result, our survey may indicate that users are more aware of what permissions are being requested than they are in practice.
+  \item If read and write permissions are fundamentally different in some non-obvious way, it may be invalid to compare understanding of read permissions to understanding of write permissions. It is possible that users would understand write permissions even more poorly if they were not all-or-nothing.
+  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States. Our choice of Mechanical Turk is justified by Goodman, Cryder, and Cheema's finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree.
+  \item We had to make up permissions that are not actually granted upon authorization so users did not have to select every option to be correct. If we did a poor job, this could have influenced results. We did not count these made up permissions in our statistical analysis for this reason.
+\end{itemize}
+
+
 %\subsection{Analysis of survey results}
 
 %Our survey showed that users are significantly better than random guessing at identifying which read permissions are being requested. However, they are significantly worse at identifying write permissions. The additional survey demonstrated that users may not understand that they are allowing data to be viewed regardless of its privacy settings.
@@ -569,20 +582,6 @@ It appears that the reason that all write permissions are presented together is 
 This transition towards only one type of publishing is visible to anyone who has used Facebook for several years: updating one's status and uploading a photo used to be distinct actions, but now they are both performed by creating a post on one's Timeline. The read and extended permissions that are presented in groups may stem from similar changes in Facebook's structure and it may no longer be possible to separate them. However, these changes may make the Facebook Connect authentication process less clear to users. Section~\ref{sec:understanding} will explore whether they do.
 
 Facebook's own research has demonstrated that ``the more permissions an app requests, the less likely it is that people will use Facebook to log into [that] app''\cite{fbpermsinstructions}.
-
-
-\subsection{Limitations}
-\label{sec:limitations}
-
-There are several possible limitations to this survey:
-
-\begin{itemize}
-  \item As discussed previously, by giving respondents several options to select we suggested possible things the site could do that may not have occurred to them otherwise. In addition, in order to respond to our questions they may have paid more attention to the permissions dialogues than they normally would have. As a result, our survey may indicate that users are more aware of what permissions are being requested than they are in practice.
-  \item If read and write permissions are fundamentally different in some non-obvious way, it may be invalid to compare understanding of read permissions to understanding of write permissions. It is possible that users would understand write permissions even more poorly if they were not all-or-nothing.
-  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States. Our choice of Mechanical Turk is justified by Goodman, Cryder, and Cheema's finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree.
-  \item We had to make up permissions that are not actually granted upon authorization so users did not have to select every option to be correct. If we did a poor job, this could have influenced results. We did not count these made up permissions in our statistical analysis for this reason.
-\end{itemize}
-
 
 \section{Comparison to other SSO implementations}
 
