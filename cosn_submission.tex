@@ -503,7 +503,7 @@ In one pilot survey of the free response format, a respondent stated that the si
 
 We surveyed 100 additional Mechanical Turk respondents to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. (The correct answer is all three.) The survey can be seen in Appendix~\ref{appendix:readsurvey2}.
 
-This question can also be statistically tested against random guessing. The null hypothesis is that users are equally likely to identify that data could be read regardless of its privacy setting.
+Our null hypothesis in this experiment is that users are equally likely to identify that data could be read regardless of its privacy setting.
 
 \subsubsection{Results}
 
@@ -533,6 +533,8 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
 
 For each privacy setting tested, the null hypothesis that users are equally likely to identify that data can be seen regardless of its privacy setting can be rejected with a $G$-test $p < .001$ and a $G$-test statistic of 88.34. It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
 
+Although our first set of surveys and Egelman's study \cite{egelman} indicated that read permissions are understood decently well, this study suggests that these results may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses). A future study could test this comprehensively.
+
 
 \subsection{Limitations}
 \label{sec:limitations}
@@ -555,13 +557,20 @@ There are several possible limitations to our surveys:
 
 % BEGIN WITH THIS IF WE JUST FOCUS ON COMPARISON: Our studies indicate that users' understanding of write permissions messages is significantly worse than their understanding of read permissions messages.
 
-Our studies indicate that users have a decent understanding of read permissions messages but a poor---and significantly worse---understanding of write permissions messages. As discussed in Sections~\ref{sec:investigationdiscussion} and ~\ref{sec:fbresponse}, Facebook claims that all-or-nothing write permissions are easier for the user to understand. However, the comparison to the very granular read permissions suggests that users understand specific, distinct permissions better.
+Our studies indicate that users have a decent understanding of read permissions messages but a poor---and significantly worse---understanding of write permissions messages. As discussed in Sections~\ref{sec:investigationdiscussion} and ~\ref{sec:fbresponse}, Facebook claims that all-or-nothing write permissions are easier for the user to understand. However, comparison with the very granular read permissions suggests that users understand specific, distinct permissions better.
 
-Facebook has attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy \cite{fbpolicy}. 
+We also observe that grouped permissions cause confusion for developers who may receive more permissions than intended due to grouping of permissions.
+This appears contrary to Facebook's stated advice to developers that they should ``only ask for the permissions that are essential to an app [or site]'' \cite{fbpermsinstructions}. Facebook's own research has demonstrated that ``the more permissions an app requests, the less likely it is that people will use Facebook to log into [that] app''\cite{fbpermsinstructions}.
+But because Facebook Connect often grants more permissions than the developer requested (even just by always granting \emph{public\_profile} and \emph{user\_friends}), the developer has no choice but to receive unnecessary permissions.
 
-Although our first set of surveys and Egelman's study \cite{egelman} indicated that read permissions are understood decently well, our final study suggests that these results may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public. However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses). A future study could test this comprehensively.
+We consider several possible explanations for why the system may be architected this way.
 
-\subsection{Why does Facebook handle permissions this way?}
+\subsection{Evolution over time}
+
+Some of our findings around the permissions API appear likely to be artifacts of the API's evolution, many of which appear harmless.
+For example, two permissions for reading an email address exist (\emph{email} and \emph{contact\_email}) and grouping them seems sensible.
+
+%\subsection{Why does Facebook handle permissions this way?}
 \label{sec:investigationdiscussion}
 
 \begin{comment}
@@ -573,21 +582,24 @@ Combining \emph{user\_about\_me} and \emph{user\_activities} and calling it ``pe
 \end{comment}
 
 %Ideally, the system would not be so convoluted. Only the permissions requested by the developer would ever be granted to the site, and all of these permissions would be presented to the user individually. This could make it much easier for users to understand what permissions they are granting a site when they log in. 
-Our studies determined that all-or-nothing write permissions are actually more confusing for users. So why does Facebook group them?
-Grouping permissions appears contrary to Facebook's stated advice to developers that they should ``only ask for the permissions that are essential to an app [or site]'' \cite{fbpermsinstructions}. Facebook's own research has demonstrated that ``the more permissions an app requests, the less likely it is that people will use Facebook to log into [that] app''\cite{fbpermsinstructions}.
-But because Facebook Connect often grants more permissions than the developer requested (even just by always granting \emph{public\_profile} and \emph{user\_friends}), the developer has no choice but to receive unnecessary permissions.
-In some cases, this appears to be a harmless artifact of the API's evolution.
-For example, two permissions for reading an email address exist (\emph{email} and \emph{contact\_email}) and grouping them seems sensible. %Even forcing every site to request the \emph{public\_profile} and \emph{user\_friends} permissions is too much: For many login implementations, the site may need nothing more than a way to identify the user, such as by an email address or an id number. In such cases, the default permissions are unnecessary and may deter people from using the Facebook Connect system.
+%Our studies determined that all-or-nothing write permissions are actually more confusing for users. So why does Facebook group them?
 
-It appears that the reason that all write permissions are presented together is that Facebook has decided to eliminate the distinction between different types of publishing. The description in the documentation for \emph{publish\_actions} is ``publish my app activity to Facebook'' and the description for \emph{publish\_stream} is ``publish content to my Wall'' \cite{fbpermissions}. These are quite vague, and seem as though they could encompass nearly anything. A blog post from a Facebook employee \cite{publishperms} helps explain these permissions: They are essentially the same thing (and are being merged into one) and allow a site to do any type of publishing to Facebook. The post mentions that they can be used to upload a photo, which one may have suspected required the \emph{photo\_upload} permission. Another post from a Facebook employee mentions that developers should only request \emph{publish\_actions} because it encompasses all other write permissions in an effort to ``simplify the model'' \cite{clarity}. Furthermore, Facebook's Graph API lists \emph{publish\_actions} as the permission needed for all API calls that involve publishing \cite{fbapi}. \textbf{TODO: Should this paragraph be trimmed down since we've already mentioned FB security saying this is intentional?}
+ %Even forcing every site to request the \emph{public\_profile} and \emph{user\_friends} permissions is too much: For many login implementations, the site may need nothing more than a way to identify the user, such as by an email address or an id number. In such cases, the default permissions are unnecessary and may deter people from using the Facebook Connect system.
+
+It appears that the reason that all write permissions are presented together is that Facebook has decided to eliminate the distinction between different types of publishing. The description in the documentation for \emph{publish\_actions} is ``publish my app activity to Facebook'' and the description for \emph{publish\_stream} is ``publish content to my Wall'' \cite{fbpermissions}. These are quite vague, and seem as though they could encompass nearly anything. A blog post from a Facebook employee \cite{publishperms} helps explain these permissions: They are essentially the same thing (and are being merged into one) and allow a site to do any type of publishing to Facebook. The post mentions that they can be used to upload a photo, which one may have suspected required the \emph{photo\_upload} permission. Another post from a Facebook employee mentions that developers should only request \emph{publish\_actions} because it encompasses all other write permissions in an effort to ``simplify the model'' \cite{clarity}. Furthermore, Facebook's Graph API lists \emph{publish\_actions} as the permission needed for all API calls that involve publishing \cite{fbapi}.
 
 This transition towards only one type of publishing is visible to anyone who has used Facebook for several years: updating one's status and uploading a photo used to be distinct actions, but now they are both performed by creating a post on one's Timeline. Perhaps at one point the six granular write permissions (\emph{create\_note}, \emph{upload\_photos}, \emph{upload\_videos}, \emph{publish\_checkins}, \emph{share\_item}, \emph{status\_update}) were the only write permissions. The read and extended permissions that are presented in groups may stem from similar changes in Facebook's structure and it may no longer be possible to separate them. %However, these changes may make the Facebook Connect authentication process less clear to users. Section~\ref{sec:understanding} will explore whether they do.
 
-It is understandable that changes in the structure of Facebook necessitate changes in the Facebook Connect API to keep it simple and consistent. However, Facebook is sacrificing the privacy of its users for the sake of simplicity: as previously discussed, Facebook acknowledges that is giving developers more write permissions than they need and just tells them to not abuse the permissions. However, there are many malicious Facebook apps that abuse the permissions they are given \cite{isappsafe,frappe}.
+It is understandable that changes in the structure of Facebook necessitate changes in the Facebook Connect API to keep it simple and consistent. However, our results suggest user control may be being significantly harmed for the sake of simplicity: as previously discussed, Facebook acknowledges that is giving developers more write permissions than they need and just tells them to not abuse the permissions. This threat doesn't appear purely academic, as there are many malicious Facebook apps that abuse the permissions they are given \cite{isappsafe,frappe}.
 
-It is also possible that Facebook intentionally crafted a vague write permissions message that users do not understand. If users thought too many permissions were being granted, they may not use the app. A vague message allows developers to have more permissions without losing users. \textbf{TODO: Add citation to Joe's paper about benefits of decreasing privacy.}
+\subsection{Privacy salience}
+
+It is also possible that Facebook has evolved towards having a vague write permissions message as a strategy to decrease \textit{privacy salience}~\cite{BP09}. If users thought too many permissions were being granted, they may not use the app or the Facebook Connect platform in general. A vague message allows developers to receive more permissions without losing users.
 
 Evidence that this may be Facebook's intention can be seen by comparing the current write permissions messages to those from the previous implementation of Facebook Connect. As mentioned previously, 26 of the 203 websites we crawled used an older implementation. Table~\ref{table:oldmessages} presents a sampling of the messages we saw. These messages may be misleading since they provide examples of what the site can post based on the specific site even though all sites in the table request only \emph{publish\_actions}. However, these messages do distinctly identify several things the sites can post, unlike the vague messages in the current implementation. Facebook's choice to eliminate these descriptions may indicate an attempt to be less clear about what permissions are actually being granted.
+
+This explanation is somewhat inconsistent with the relatively detailed read permissions being displayed to users.
+However, it's possible users are less sensitive to granting read permissions whereas detailed write permissions are more concerning, meaning there is more obscure to downplay the latter. 
 
 \begin{table}[h!]
   \centering
@@ -603,6 +615,12 @@ Evidence that this may be Facebook's intention can be seen by comparing the curr
   \caption{Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission they request is \emph{publish\_actions}.} 
   \label{table:oldmessages}
 \end{table}
+
+\subsection{Ineffectiveness of user choice}
+
+It is possible that write messages in particular are vague because users are unable to effectively understand them at all (or simply don't pay attention to them~\cite{egelman}), so Facebook has decided it is better off protecting user privacy by policing developers instead of providing users with effective choice and control.
+
+Facebook has publicly attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy \cite{fbpolicy}. 
 
 
 %\section{Comparison to other SSO implementations}
