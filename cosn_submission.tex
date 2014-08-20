@@ -12,6 +12,24 @@ pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions
 \usepackage{placeins}
 \usepackage{verbatim}
 
+\let\proof\relax
+\let\endproof\relax
+\usepackage{amsthm}
+
+\newtheorem{hypothesis}{Hypothesis}
+
+% copyright notice
+\newfont{\mycrnotice}{ptmr8t at 7pt}
+\newfont{\myconfname}{ptmri8t at 7pt}
+\let\crnotice\mycrnotice%
+\let\confname\myconfname%
+\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.}
+\conferenceinfo{COSN'14,}{October 1--2, 2014, Dublin, Ireland.}
+\copyrightetc{Copyright 2014 ACM \the\acmcopyr}
+\crdata{978-1-4503-3198-2/14/10\ ...\$15.00.\\
+http://dx.doi.org/10.1145/2660460.2660471}
+\clubpenalty=10000
+\widowpenalty = 10000
 
 \begin{document}\sloppy
 
@@ -65,8 +83,8 @@ This has been sufficient in practice to overcome the lack of adoption incentives
 %This is a feature of many SSO systems based off of the OAuth protocol.
 
 A second important selling point is that Facebook Connect requires user approval and requires relying sites to request a specific set of permission from the user up front before reading or writing data from the user's profile.
-These are presented to the user in a series of dialogs (shown in Figure~\ref{figure:messageexample}) which the user must accept prior to logging into a relying site for the first time.
-In the words of Facebook \textit{``The user will have total control of the permissions granted''}~\cite{fb-connect-announce}.
+These are presented to the user in a series of dialogues (shown in Figure~\ref{figure:messageexample}) which the user must accept prior to logging into a relying site for the first time.
+In the words of Facebook, \textit{``The user will have total control of the permissions granted''}~\cite{fb-connect-announce}.
 %Facebook Login requires user approval Developers integrating Facebook Connect may request various permissions from Facebook allowing them to see information on the user's profile or publish content to their profile. %The permissions available to the developer can be seen in the Facebook Connect documentation \cite{fbpermissions}.
 
 %probably too much for the intro
@@ -88,9 +106,9 @@ We will explore both questions in this paper and show that:
 \begin{itemize}
   \item Facebook Connect sometimes asks the user to authorize more permissions than the developer intended to request.
   \item Write permissions are granted to sites on an all-or-nothing basis. For example, if a site wants to update the user's status, it must also gain permission to upload photos.
-  \item Users generally understand which read permissions are being requested when they log in, although many don't realize they are granting access to data they have marked as private using their privacy settings.
-  \item Users generally do not understand the variety of write permissions sites will receive upon authorization. This indicates that, despite Facebook's claims that all-or-nothing write permissions are ``simpler'' for users to understand, users the more granular read permissions much better.
-  \item  User are influenced by the identity of the relying party, for example, they are much more likely to understand a photo sharing website can upload photos to their account. This suggests users are assuming a \textit{contextual integrity} model of privacy~\cite{contextual-integrity}, although this not implemented technically.
+  \item Users generally understand which read permissions are being requested when they log in, although many do not realize they are granting access to data they have marked as private using their privacy settings.
+  \item Users generally do not understand the variety of write permissions sites will receive upon authorization. This indicates that, despite Facebook's claims that all-or-nothing write permissions are ``simpler'' for users to understand, users understand the more granular read permissions much better.
+  \item  Users are influenced by the identity of the relying party; for example, they are much more likely to understand a photo sharing website can upload photos to their account. This suggests users are assuming a \textit{contextual integrity} model of privacy~\cite{contextual-integrity}, although this is not implemented technically.
 \end{itemize}
 
 \section{Implementation of Facebook Connect permissions}
@@ -101,7 +119,7 @@ Facebook Connect's process of a site requesting permissions from a user can be b
 \begin{enumerate}
   \item During login flow, relying parties request a set of permissions from the Facebook Connect API. We'll call this set the \textit{requested permissions}.
   \item Facebook receives the requested permissions and translates them into a set of permissions for approval which we'll call the \textit{granted permissions}.
-  \item Facebook translates the the granted permissions into a dialog presented to the user for approval. We'll call the text the \textit{displayed permissions}.
+  \item Facebook translates the the granted permissions into a dialogue presented to the user for approval. We'll call the text the \textit{displayed permissions}.
 \end{enumerate}
 
 Ideally, these three sets of permissions would be identical and the text shown to the user would clearly represent them. In this section we'll explore the difference between the requested and granted permissions; we'll discuss the relation of the displayed to granted permissions in Section~\ref{sec:understanding}.
@@ -121,7 +139,7 @@ Finally, we manually examined these to find 91 which had a Facebook Connect logi
 
 Unfortunately, the AppInspect database does not include apps that are used solely for Facebook Connect, only those that have native Facebook apps. 
 %In part because of this, the majority of the sites we found from the database are relatively obscure.
-To make up for these deficiencies, we took the Alexa Top 500~\cite{alexa} websites from February 27\textsuperscript{th}, 2014 and manually identified those with Facebook Connect logins (112 sites). 
+To make up for these deficiencies, we took the Alexa Top 500~\footnote{The top 500 sites on the web <http://www.alexa.com/topsites>} websites from February 27\textsuperscript{th}, 2014 and manually identified those with Facebook Connect logins (112 sites). 
 
 Combining these two lists yielded a diverse list of 203 sites, about half which receive heavy traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database).
 %This list provides a diverse sampling of the websites people log in to with Facebook Connect.
@@ -144,8 +162,8 @@ We confirmed using our test site that this value is indeed exactly what the deve
 \floatstyle{boxed}
 \restylefloat{figure}
 \begin{figure}[h!]
-  {\small{\fontfamily{phv}\selectfont %https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\\&client\_id=138615416238413\&display=popup\&domain=www.timecr\\unch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\\\%3A\%2F\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2\\F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df17cdd7f881aff\%26\\domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%\\252Fwww.timecrunch.me\%252Ff2dc123d3ff5394\%26relation\%3Do\\pener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\%2Csi\\gned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2\\Cuser\_groups\%2Cfriends\_groups\%2Cpublish\_stream}\&sdk=joey}}
-https://www.facebook.com/dialog/oauth?app\_id=138615416238413\\
+  {\small{\fontfamily{phv}\selectfont %https://www.facebook.com/dialogue/oauth?app\_id=138615416238413\\\&client\_id=138615416238413\&display=popup\&domain=www.timecr\\unch.me\&e2e=\%7B\%7D\&locale=en\_US\&origin=1\&redirect\_uri=http\\\%3A\%2F\%2Fstatic.ak.facebook.com\%2Fconnect\%2Fxd\_arbiter\%2\\F8n77RrR4jg0.js\%3Fversion\%3D40\%23cb\%3Df17cdd7f881aff\%26\\domain\%3Dwww.timecrunch.me\%26origin\%3Dhttp\%253A\%252F\%\\252Fwww.timecrunch.me\%252Ff2dc123d3ff5394\%26relation\%3Do\\pener\%26frame\%3Df25cadbc2ca73cc\&response\_type=token\%2Csi\\gned\_request\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2\\Cuser\_groups\%2Cfriends\_groups\%2Cpublish\_stream}\&sdk=joey}}
+https://www.facebook.com/dialogue/oauth?app\_id=138615416238413\\
 \&domain=www.timecrunch.me\&response\_type=token\%2Csigned\_re\\
 quest\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2Cuser\_gr\\
 oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
@@ -158,9 +176,9 @@ oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
 \restylefloat{figure}
 \subsection{Granted permissions}
 
-Facebook receives the requested permissions and translates them into a set of granted permissions which may exclude requested permissions which are deprecated or in some cases add additional permissions. 
+Facebook receives the requested permissions and translates them into a set of granted permissions. The granted permissions may exclude requested permissions that are deprecated, or, in some cases, may add additional permissions. 
 %In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
-Two permissions are always added regardless of what is requested which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}. These are \emph{public\_profile}, which gives access to the user's public profile, and \emph{user\_friends}, which gives access to the user's friends list. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
+Two permissions, which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}, are always added regardless of what is requested: \emph{public\_profile} gives access to the user's public profile and \emph{user\_friends} gives access to the user's friends list. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
 
 %\subsubsection{Identifying granted permissions in practice}
 \label{sec:inputels}
@@ -196,7 +214,7 @@ We confirmed with our test site that these permissions are actually granted and 
   \label{figure:inputels}
 \end{figure}
 
-We used these hidden elements to determine which permissions were granted in contrast to what was request for all 177 sites we crawled.
+We used these hidden elements to determine which permissions were granted in contrast to which were requested for all 177 sites we crawled.
 Our results are shown in Figure~\ref{figure:scopevshtml}.
 First, we confirmed that with every site crawled the aforementioned default permissions (\emph{public\_profile} and \emph{user\_friends}) always appear in granted read permissions although they were never requested.
 % unless explicitly requested by the developer. We verified this both in the test site and with the data from the sites we crawled: All 177 sites with the current login format had both permissions in the \emph{read} input element.
@@ -321,26 +339,26 @@ This motivated us to evaluate whether all-or-nothing write permissions are in fa
 
 The second critical component in effective user control on Facebook Connect is users' comprehension of the messages describing the permissions they're asked to approve.
 This is especially important given our findings in Section~\ref{sec:implementation} that all write permissions are grouped together and displayed with a single somewhat-vague message. 
-Previous research  by Egelman \cite{egelman} found that 88\% of users have a general understanding of Facebook's read permissions dialogs; however, he studied only the read permissions dialogues.
+Previous research  by Egelman \cite{egelman} found that 88\% of users have a general understanding of Facebook's read permissions dialogues; however, he studied only the read permissions dialogues.
 To our knowledge this is the first study evaluating comprehension of write permissions.
 Together with read permissions these make a fascinating natural experiment: are users better able to understand granular (but complicated) read permissions, or simpler (but vaguer) write permissions?
 To test this and other aspects of user comprehension, we ultimately conducted three studies:
 
 \begin{enumerate}
-  \item One study tested general comprehension of read and write permissions and compares them to each other (see Section~\ref{sec:comparisonsurvey}).\footnote{We decided not to test extended permissions since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested them).} 
+  \item One study tested general comprehension of read and write permissions and compared them to each other (see Section~\ref{sec:comparisonsurvey}).\footnote{We decided not to test extended permissions since they are presented similarly to read permissions and are relatively rare (only seven out of the 177 sites requested them).} 
   \item One study tested how site identity affects interpretation of the write permissions message (see Section~\ref{sec:multisite}).
   \item Our final study tested to see if users understand that they are giving access to data regardless of their profile privacy settings (see Section~\ref{sec:privacysurvey}).
 \end{enumerate}
 
 \subsection{Methodology}
 
-We conducted our surveys using Amazon Mechanical Turk, a service where workers can be paid to complete simple online tasks. This allowed a large and reasonably diverse response pool for little cost (see Section~\ref{sec:limitations} for a discussion of its limitations).
-All of our surveys took the basic format of present users with real dialogs that they might see when logging in to a site using Facebook Connect and asking questions about what actions that site may take if they authorize the login.
+We conducted our surveys using Amazon Mechanical Turk, a service where workers can be paid to complete simple online tasks. This allowed a large and reasonably diverse response pool for little cost (we paid 10-15 cents per response). (See Section~\ref{sec:limitations} for a discussion of Mechanical Turk's limitations.)
+All of our surveys took the basic format of presenting users with real dialogues that they might see when logging in to a site using Facebook Connect and asking questions about what actions that site may take if they authorize the login.
 
 
 \subsubsection{Pilot studies}
 
-We piloted three different methods of testing user comprehension. After verifying that the respondent had seen a Facebook Connect login, all pilots began by presenting the respondent with either a read or write permissions message that they might see when using Facebook Connect. No respondents were presented with both to ensure that no one got the two questions mixed up.
+We piloted three different methods of testing user comprehension. After verifying that the respondent had previously seen a Facebook Connect login, all pilots began by presenting the respondent with either a read or write permissions message that they might see when using Facebook Connect. No respondents were presented with both to ensure that no one got the two questions mixed up.
 Respondents were then presented with one of the following three question types:
 
 \begin{enumerate}  
@@ -349,21 +367,30 @@ Respondents were then presented with one of the following three question types:
   \item A free response question asking the user to describe what information they thought the site would be able to do if they clicked okay.
 \end{enumerate}
 
-The free response question has the advantage of not prompting the user with any ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answer. While this may be reflect how users pay little attention to permissions messages in real life when they log in to sites, it is not useful for this survey.
+The free response question has the advantage of not prompting the user with any ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answer. While this may reflect how users pay little attention to permissions messages in real life when they log in to sites, it is not useful for this survey.
 There was no noticeable difference in responses between the yes/no questions and the multiple-selection questions, so we chose the latter to get results about more permissions.
 
-We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. To keep our independent variables separate, we conducted two different surveys. The first survey (Section~\ref{sec:comparisonsurvey} used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
+We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. To keep our independent variables separate, we conducted two different surveys. The first survey (Section~\ref{sec:comparisonsurvey}) used the site name ``Hooli.com.'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}.) The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
 
 \subsection{Read vs.\ write permissions}
 \label{sec:comparisonsurvey}
 
 Our first study tests general comprehension of read and write permissions in such a way that they can be directly compared. For all questions, we used the site name ``Hooli.com'' to eliminate the site name as a variable. Our tests were designed to evaluate the the following null hypotheses:
 
-\begin{enumerate}
-  \item Respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing.
-  \item Respondents' ability to identify which write permissions they are authorizing is no different than if they were randomly guessing.
-  \item Respondents' ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing.
-\end{enumerate}
+\begin{hypothesis}
+Respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing.
+\end{hypothesis}
+\begin{hypothesis}
+Respondents' ability to identify which write permissions they are authorizing is no different than if they were randomly guessing.
+\end{hypothesis}
+\begin{hypothesis}
+Respondents' ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing.
+\end{hypothesis}
+%\begin{enumerate}
+ % \item Respondents' ability to identify which read permissions they are authorizing is no different than if they were randomly guessing.
+  %\item Respondents' ability to identify which write permissions they are authorizing is no different than if they were randomly guessing.
+ % \item Respondents' ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing.
+%\end{enumerate}
 
 This survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey and were excluded from analysis, but were still paid for their participation.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}. 
 
@@ -460,7 +487,11 @@ We assigned a ranking to each respondent based on the percentage of permissions 
 
 As previously mentioned, our pilot surveys indicated that the site identity may influence how people interpret the write permissions message. We performed a separate survey with 300 Mechanical Turk workers to test this. The format of the survey was identical to the write permissions questions in the first survey and we provided the same options for the user to select. However, instead of using ``Hooli.com'' as the website in question, one third of respondents were presented with \emph{Flickr.com} (a photo and video sharing site), one third with \emph{TripAdvisor.com} (a travel site), and one third with \emph{iFlikeU.com} (an anonymous messaging site). (Since there is only one write permissions message, the message presented to the user in all cases was identical aside from the site name and description.)
 
-The results of this survey can be statistically analyzed with a $G$-test to see if the number of respondents who thought each permission would be granted varied across the four sites (the three mentioned here plus the data from ``Hooli.com'' from the first survey). The null hypothesis is that the site identity does not affect how many people think a given permission is being requested.
+The results of this survey can be statistically analyzed with a $G$-test to see if the number of respondents who thought each permission would be granted varied across the four sites (the three mentioned here plus the data from ``Hooli.com'' from the first survey). Our null hypothesis is: 
+
+\begin{hypothesis}
+The site identity does not affect how many people think a given permission is being requested.
+\end{hypothesis}
 
 \subsubsection{Results}
 
@@ -506,7 +537,11 @@ In one pilot survey of the free response format, a respondent stated that the si
 
 We surveyed 100 additional Mechanical Turk respondents to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them. (The correct answer is all three.) The survey can be seen in Appendix~\ref{appendix:readsurvey2}.
 
-Our null hypothesis in this experiment is that users are equally likely to identify that data could be read regardless of its privacy setting.
+Our null hypothesis in this experiment is:
+
+\begin{hypothesis}
+Users are equally likely to identify that data can be read regardless of its privacy setting.
+\end{hypothesis}
 
 \subsubsection{Results}
 
@@ -547,8 +582,8 @@ There are several possible limitations to our surveys:
 \begin{itemize}
   \item As discussed previously, by giving respondents several options to select we suggested possible things the site could do that may not have occurred to them otherwise. In addition, in order to respond to our questions they may have paid more attention to the permissions dialogues than they normally would have. As a result, our survey may indicate that users are more aware of what permissions are being requested than they are in practice.
   \item If read and write permissions are fundamentally different in some non-obvious way, it may be invalid to compare understanding of read permissions to understanding of write permissions. It is possible that users would understand write permissions even more poorly if they were presented granularly rather than all-or-nothing.
-  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States. Our use of Mechanical Turk is justified by previous research finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree. In addition, users are known to pay little attention to permissions messages in practice~\cite{egelman}.
-  \item We had to make up permissions that are not actually granted upon authorization so users did not have to select every option to be correct. If we did a poor job, this could have influenced results by distracting or unsettling users. We did not count these made up permissions in our statistical analysis for this reason.
+  \item There may be some demographic bias in using Mechanical Turk to collect responses. We did not collect demographic information from respondents although we did restrict respondents to the United States (this was the only restriction we placed on respondents). Our use of Mechanical Turk is justified by previous research finding that ``[Mechanical Turk] participants produced reliable results that are consistent with previous decision-making research'' \cite{mturkreliability}. The most relevant concern they raise is of respondents not paying enough attention and becoming fatigued in longer surveys; the short length of our surveys hopefully ameliorated that to some degree. In addition, users are known to pay little attention to permissions messages in practice~\cite{egelman}.
+  \item When asking users which permissions were being granted, we had to make up some fake options so users did not have to select every option to be correct. If we did a poor job, this could have influenced results by distracting or unsettling users. We did not count these made up permissions in our statistical analysis for this reason.
 \end{itemize}
 
 
@@ -593,7 +628,7 @@ It appears that the reason that all write permissions are presented together is 
 
 This transition towards only one type of publishing is visible to anyone who has used Facebook for several years: updating one's status and uploading a photo used to be distinct actions, but now they are both performed by creating a post on one's Timeline. Perhaps at one point the six granular write permissions (\emph{create\_note}, \emph{upload\_photos}, \emph{upload\_videos}, \emph{publish\_checkins}, \emph{share\_item}, \emph{status\_update}) were the only write permissions. The read and extended permissions that are presented in groups may stem from similar changes in Facebook's structure and it may no longer be possible to separate them. %However, these changes may make the Facebook Connect authentication process less clear to users. Section~\ref{sec:understanding} will explore whether they do.
 
-It is understandable that changes in the structure of Facebook necessitate changes in the Facebook Connect API to keep it simple and consistent. However, our results suggest user control may be being significantly harmed for the sake of simplicity: as previously discussed, Facebook acknowledges that is giving developers more write permissions than they need and just tells them to not abuse the permissions. This threat doesn't appear purely academic, as there are many malicious Facebook apps that abuse the permissions they are given \cite{isappsafe,frappe}.
+It is understandable that changes in the structure of Facebook necessitate changes in the Facebook Connect API to keep it simple and consistent. However, our results suggest user control may significantly harmed for the sake of simplicity. This threat does not appear purely academic, as there are many malicious Facebook apps that abuse the permissions they are given \cite{isappsafe,frappe}.
 
 \subsection{Privacy salience}
 
@@ -602,7 +637,9 @@ It is also possible that Facebook has evolved towards having a vague write permi
 Evidence that this may be Facebook's intention can be seen by comparing the current write permissions messages to those from the previous implementation of Facebook Connect. As mentioned previously, 26 of the 203 websites we crawled used an older implementation. Table~\ref{table:oldmessages} presents a sampling of the messages we saw. These messages may be misleading since they provide examples of what the site can post based on the specific site even though all sites in the table request only \emph{publish\_actions}. However, these messages do distinctly identify several things the sites can post, unlike the vague messages in the current implementation. Facebook's choice to eliminate these descriptions may indicate an attempt to be less clear about what permissions are actually being granted.
 
 This explanation is somewhat inconsistent with the relatively detailed read permissions being displayed to users.
-However, it's possible users are less sensitive to granting read permissions whereas detailed write permissions are more concerning, meaning there is more obscure to downplay the latter. 
+It may be that read permissions are more sensitive to users since they create a data leak so it is more important that they be clearly detailed.
+\textbf{HELP JOE I'M HAVING A HARD TIME EDITING THIS PARAGRAPH. NOT SURE I UNDERSTAND THE SIGNIFICANCE OF WHAT WE'RE TRYING TO SAY HERE.}
+% However, it's possible users are less sensitive to granting read permissions whereas detailed write permissions are more concerning, meaning there is more obscure to downplay the latter. 
 
 \begin{table}[h!]
   \centering
@@ -621,7 +658,7 @@ However, it's possible users are less sensitive to granting read permissions whe
 
 \subsection{Ineffectiveness of user choice}
 
-It is possible that write messages in particular are vague because users are unable to effectively understand them at all (or simply don't pay attention to them~\cite{egelman}), so Facebook has decided it is better off protecting user privacy by policing developers instead of providing users with effective choice and control.
+It is possible that write messages in particular are vague because users are unable to effectively understand them at all (or simply do not pay attention to them~\cite{egelman}), so Facebook has decided it is better off protecting user privacy by policing developers instead of providing users with effective choice and control.
 
 Facebook has publicly attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions \cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user’s behalf must be expected by the user and consistent with the user’s actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy \cite{fbpolicy}. 
 
@@ -641,7 +678,9 @@ This research could be continued in a variety of directions.
 \begin{itemize}
   \item The results of our survey testing whether users understand that sites are getting access to their information even if it is marked as private (see Figure~\ref{figure:privacypercents}) indicate that there is room for more research in the area. This should be tested with a variety of different permissions. One could also experiment with ways to make it clear to the user that all of their information is being shared, regardless of the privacy settings.
   \item We previously mentioned that our survey included options of things the sites could not actually do so the respondent would not have to select all options to be correct. However, many people selected these fake options. One could research what permissions users think are being requested beyond what is actually being requested. This is an important area of research because people may be unwilling to use the SSO service if they think too many permissions are being given.
-  \item It is clear that users do not understand the full range of write permissions being requested. However, Egelman \cite{egelman} determined that users make their decision to use Facebook Connect or not before they see the permissions requested. Egelman only tested read permissions, though. A similar study could see how the presence of write permissions affects users' decisions to use Facebook Connect. It could also test whether explicitly stating what write permissions are being requested and varying the number of write permissions requested affects whether users are willing to use the system.
+  \item It is clear that users do not understand the full range of write permissions being requested. However, Egelman \cite{egelman} determined that users make their decision to use Facebook Connect or not before they see the permissions requested. Egelman only tested read permissions, though. A similar study could see how the presence of write permissions affects users' decisions to use Facebook Connect. 
+  \item We observed that users understand the granular read permissions better than the single write permission. One could test whether granular write permissions are in fact more clear to users than the current system. We did not test this because the success of the study would depend on the researcher's ability to make up plausible granular write permissions.
+%  which write permissions are being requested and varying the number of write permissions requested affects whether users are willing to use the system.
 \end{itemize}
 
 \section{Related work}
@@ -656,15 +695,15 @@ Sun et al. studied user understanding of the authentication process in general--
 Our study differs from previous studies by determining what specific permissions correspond to the messages presented to the user and by evaluating user comprehension of these permissions. This lets us answer most precisely whether users understand exactly what information they are sharing by using Facebook Connect. In addition, Egelman only looked at read permissions. We found that write permissions are much more confusing to users.
 
 
-\section{Conclusions}
+\section{Concluding Remarks}
 
 To maximize security and to ensure users feel comfortable using Facebook Connect, developers should be allowed to minimize the number of permissions they request from the user and the permissions should be presented to the user as clearly as possible. On both fronts, Facebook Connect could be improved.
 
 When a developer designs their site to request certain permissions through Facebook Connect, the Facebook Connect system may translate certain permissions into broader groups of permissions that will all be granted if the user authorizes the site to access their profile. This may force users to give unnecessary permissions to a site in order to log in. 
 
-The messages presented to the user for read permissions are reasonably clear---our survey showed that a majority of users understand what data they are providing access to. (However, they may be unaware that they are providing access to this information even if their privacy settings are set to private.)
+The messages presented to the user for read permissions are reasonably clear---our survey showed that a majority of users understand what data they are providing access to. However, they may be unaware that they are providing access to this information even if their privacy settings are set to private.
 
-Write permissions, however, are much less clear. Facebook has ``simplified'' the write permissions process so that every site either gets all write permissions or none. Our survey shows that users do not understand the many things a site will be able to do to their profile if they authorize the vague message stating that the site ``would like to post to Facebook for you.'' In addition, users' interpretations of this message vary depending on the identity of the site they are logging in to although this actually has no impact on the permissions granted. Given the relative success with which users were able to identify the more distinct and well-defined read permissions, it appears users might actually understand write permissions better if they were split up.
+Write permissions, however, are much less clear. Facebook has simplified the write permissions process so that every site either gets all write permissions or none. Our survey shows that users do not understand the many things a site will be able to do to their profile if they authorize the vague message stating that the site ``would like to post to Facebook for you.'' In addition, users' interpretations of this message vary depending on the identity of the site they are logging in to although this actually has no impact on the permissions granted. Given the relative success with which users were able to identify the more distinct and well-defined read permissions, it appears users might actually understand write permissions better if they were split up.
 
 On April 30, 2014 Facebook announced an update to their Facebook Login system to be rolled out over the following months that allows users to reject individual permissions or log in anonymously \cite{newlogin}. While this is a big step forward, it appears there is still only one publishing permission and it is presented with the same vague message that our survey respondents had trouble understanding. However, it does provide even more specific details about read permissions. 
 
@@ -900,7 +939,7 @@ As mentioned in Section~\ref{sec:fbresponse}, we sent a security bug report to F
 
 \noindent\textbf{Facebook Security's response}
 
-\noindent Thanks for writing in. Can you send in some screenshots of the dialog you see when requesting the different permissions? I'm curious to see if the wording changes between the two.
+\noindent Thanks for writing in. Can you send in some screenshots of the dialogue you see when requesting the different permissions? I'm curious to see if the wording changes between the two.
 
 \noindent\rule{6cm}{0.4pt}
 
@@ -932,7 +971,7 @@ The HTML for these messages has three hidden input elements named read, write, a
 
 \noindent\textbf{Facebook Security's response}
 
-\noindent The Platform team made this change to simplify the experience for developers and for users. My guess would be that generally, write permissions are more similar (ie: creating a note versus creating a video versus posting all are ways to create content on the site that aren't very different) whereas read permissions are more distinct (ie: an app which can view your friends does not necessarily need to view your relationships unless major functionality changes).
+\noindent The Platform team made this change to simplify the experience for developers and for users. My guess would be that generally, write permissions are more similar (ie: creating a note versus creating a video versus posting all are ways to create content on the site that are not very different) whereas read permissions are more distinct (ie: an app which can view your friends does not necessarily need to view your relationships unless major functionality changes).
 
 \noindent \textit{[End of correspondence]}
 

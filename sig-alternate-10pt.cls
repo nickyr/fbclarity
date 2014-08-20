@@ -563,7 +563,7 @@
  \let\maketitle\relax
  \let\@maketitle\relax
  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}\gdef\@subtitle{}\let\thanks\relax
-% \@copyrightspace %% Adjusted for 10pt submission format
+ %\@copyrightspace %% Adjusted for 10pt submission format
 }
 
 %% CHANGES ON NEXT LINES
