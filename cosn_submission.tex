@@ -1,4 +1,5 @@
-\documentclass[10pt]{sig-alternate-10pt}
+\documentclass{sig-alternate}
+
 \usepackage[
 hidelinks,
 pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions}
@@ -58,10 +59,10 @@ Joseph Bonneau\\
 \begin{abstract}
 We study Facebook Connect's permissions system using crawling, experimentation, and user surveys.
 We find several areas in which it it works differently than many users and developers expect.
-More permissions can be granted than the developer intended.
+More permissions can be granted than developers intend.
 In particular, permissions that allow a site to post to the user's profile are granted on an all-or-nothing basis.
 %We evaluate how the requested permissions are presented to the user and find that.
-While users generally understand what data sites can read from their profile, they generally do not understand the many different things the sites can post.
+While users generally understand what data sites can read from their profile, they generally do not understand the full extent of what sites can post.
 In the case of write permissions, we show that user expectations are influenced by the identity of the requesting site although this has no impact on what is actually enforced.
 We also find that users generally do not understand the way Facebook Connect permissions interact with Facebook's privacy settings.
 Our results suggest that users understand detailed, granular messages better than those that are broad and vague.
