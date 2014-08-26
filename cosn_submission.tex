@@ -2,7 +2,8 @@
 
 \usepackage[
 hidelinks,
-pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions}
+pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions},
+pdfauthor={Nicky Robinson and Joseph Bonneau}
 ]{hyperref}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{multirow}
@@ -125,7 +126,7 @@ Facebook Connect's process of a site requesting permissions from a user can be b
   \item Facebook translates the the granted permissions into a dialogue presented to the user for approval. We'll call this text the \textit{displayed permissions}.
 \end{enumerate}
 
-Ideally, these three sets of permissions would be semantically identical and the text shown to the user would clearly represent them. In this section we'll explore the difference between the requested and granted permissions; we'll discuss the relation of the displayed to granted permissions in Section~\ref{sec:understanding}.
+Ideally, these three sets of permissions would be semantically identical and the text shown to the user would clearly represent them. In this section we'll explore the difference between the requested and granted permissions; we'll compare displayed and granted permissions in Section~\ref{sec:understanding}.
 
 \subsection{Methodology}
 
@@ -138,13 +139,13 @@ To gain a better understanding, we combined information from the documentation w
 %The data from real sites was obtained by web crawling. The first step was to compile a list of sites with Facebook Connect logins.
 To obtain a list of relying sites implementing Facebook Connect, we started with the most recent (October 2013) AppInspect \cite{appinspect} database of 25,000 Facebook apps.
 We filtered this list down to about 400 apps with an external site listed on the Facebook App Center.
-Finally, we manually examined these to find 91 which had a Facebook Connect login.
+Finally, we manually idenitified 91 which had a Facebook Connect login.
 
 Unfortunately, the AppInspect database does not include apps that are used solely for Facebook Connect, only those that have native Facebook apps. 
 %In part because of this, the majority of the sites we found from the database are relatively obscure.
 To make up for these deficiencies, we took the Alexa Top 500\footnote{\url{http://www.alexa.com/topsites}} websites from February 27\textsuperscript{th}, 2014 and manually identified those with Facebook Connect logins (112 sites). 
-
-Combining these two lists yielded a diverse list of 203 sites, about half which receive heavy traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database).
+Combining these two lists gave us a total of 203 sites to study.
+%, about half which receive heavy traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database).
 %This list provides a diverse sampling of the websites people log in to with Facebook Connect.
 
 For crawling we used OpenWPM,\footnote{\url{https://github.com/citp/OpenWPM/wiki}} a Selenium-based\footnote{\url{https://github.com/cmwslw/selenium-crawler}} web crawler being developed by the Princeton Center for Information Technology Policy (CITP). 
@@ -170,7 +171,7 @@ https://www.facebook.com/dialogue/oauth?app\_id=138615416238413\\
 \&domain=www.timecrunch.me\&response\_type=token\%2Csigned\_re\\
 quest\&{\color{darkred}scope=email\%2Ccreate\_event\%2Coffline\_access\%2Cuser\_gr\\
 oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
-\caption{Example requested permissions (colored in red) shown in the scope parameter of the approval page URL for \url{timecrunch.me}.
+\caption{Example requested permissions (colored in red) in the scope parameter of the approval page URL.
   %The permissions being requested are \emph{email}, \emph{create\_event}, \emph{offline\_access} (deprecated), \emph{user\_groups}, \emph{friends\_groups}, and \emph{publish\_stream}. (`\%2C' represents a comma.)
   }
   \label{figure:scopeinurl}
@@ -181,7 +182,7 @@ oups\%2Cfriends\_groups\%2Cpublish\_stream}...}}
 
 Facebook receives the requested permissions and translates them into a set of granted permissions. The granted permissions may exclude requested permissions that are deprecated, or, in some cases, may add additional permissions. 
 %In the second step, a user visiting a site initiates the login process and Facebook creates a set of permissions that the site will get from Facebook if the user approves them. Theoretically and ideally this set would be identical to the one that the developer requested, but in practice this is not the case.
-Two permissions, which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}, are always added regardless of what is requested: \emph{public\_profile} gives access to the user's public profile and \emph{user\_friends} gives access to the user's friends list. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
+Two permissions, which Facebook calls ``Basic Info/Default permissions''\cite{fbpermsinstructions}, are always added regardless of what is requested: \emph{public\_profile} and \emph{user\_friends}. The documentation does not mention any other permissions that may be granted outside of what the developer requested.
 
 %\subsubsection{Identifying granted permissions in practice}
 \label{sec:inputels}
@@ -206,7 +207,6 @@ We confirmed with our test site that these permissions are actually granted and 
     {\scriptsize\fontfamily{pcr}\selectfont 
       \vtop{\hbox{\strut{<{\color{RoyalPurple}input} type=``{\color{blue}hidden}'' autocomplete=``{\color{blue}off}'' name=}}\hbox{\strut{``{\color{blue}extended}'' value=``{\color{darkred}create\_event,rsvp\_event}'' />}}}
     } \\ 
-     \\
   \end{tabular}
   \caption{Example granted permissions (colored in red) shown by the \emph{read}, \emph{write}, and \emph{extended} input elements on the permissions approval page for \url{timecrunch.me}. 
   %Permissions are colored red. 
@@ -229,7 +229,7 @@ However, if the \emph{create\_note} permission is requested, \emph{publish\_acti
 %(Requesting a permission such as \emph{email} does not put \emph{publish\_actions} in the HTML and the story cannot be published.)
 Through experimentation with our test site, we determined exactly which permissions are always grouped together, listed in Table~\ref{table:permgroups}.
 If any one permission in a group is requested, all permissions in the group are granted.
-We noted that permissions which are always granted together are displayed to the user with a single message, which we will discuss further in Section~\ref{sec:messages}.
+Grouped permissions are always displayed to the user with a single message, which we will discuss further in Section~\ref{sec:messages}.
 %, but it suggests that Facebook intends for them to always be given together. This further supports that the permissions in the HTML are the ones that Facebook will actually give the site, not just the ones the developer places in the scope.
 
 %\subsubsection{Differences from what the developer requested}
@@ -272,7 +272,7 @@ We noted that permissions which are always granted together are displayed to the
 \end{table}
 
 All of the grouped read and extended permissions are in pairs, so if the developer requests one they receive the other.
-The write permissions, however, are in a group of eight, which in fact contains all write permissions offered by Facebook Connect. Thus write permissions are in practice all-or-nothing.
+However, all eight write permissions are in a single group, effectively making write permissions all-or-nothing.
 %API---that is, every site that attempts to request one write permission will get them all. %In contrast, there are about 48 read permissions and nine extended permissions that are not assigned in groups (an exact number for read permissions is hard to give because some permissions have become deprecated or are not listed in the documentation).
 
 %When we crawled the logins of the real sites, we recorded all of the permissions in the HTML in addition to those in the scope (which were requested by developers). 
@@ -280,7 +280,7 @@ The write permissions, however, are in a group of eight, which in fact contains 
 %It accounts for all 177 sites crawled with the current login format.
 %It is evident that many sites are being made to request more permissions than the developer specified, especially in the write permissions category. All permissions not listed in the table had the same number of occurrences in the scope and HTML, with the expected exception of \emph{public\_profile} and \emph{user\_friends} which are given by default.
 
-\begin{figure}[h!]
+\begin{figure}[tb!]
   \centering
   \includegraphics[width=8.5cm]{scope_vs_html_cosn}
   \caption{Permissions requested vs.\ permissions granted for permissions granted in groups, as listed in Table~\ref{table:permgroups}.}
@@ -334,7 +334,7 @@ However, the grouped permissions (see Table~\ref{table:permgroups}) are displaye
 \label{sec:fbresponse}
 
 We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{Our full correspondence with Facebook is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
-This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand, which we turn to in the next section.
+This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand.%, which we turn to in the next section.
 
 
 \section{User understanding}
@@ -403,14 +403,14 @@ The other half were presented with read permissions questions. Since read permis
 
 Figure~\ref{figure:readpercents} illustrates the percentage of people who correctly identified that each permission would be given to the requesting site after they clicked okay.\footnote{Only the real permissions being requested are presented. The incorrect answers we made up are not.} Table~\ref{table:readstats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified a permission as being requested to the expected value with random guessing: half of the total number of people who were presented with that permission.
 
-\begin{figure}[tbh!]
+\begin{figure}[tb!]
   \centering
   \includegraphics[width=8.5cm]{read_percents_cosn}
   \caption{Percentage of people who correctly identified that each read permission would be granted to the site upon authorization.}
   \label{figure:readpercents}
 \end{figure}
 
-\begin{table}[tbh!]
+\begin{table}[tb!]
   \centering
   \begin{tabular}{|l|l|l|l|}
     \hline
@@ -446,14 +446,14 @@ Null Hypothesis~\ref{hyp:read_equals_random} for ``see what language you speak''
 
 Figure~\ref{figure:writepercents} illustrates the percentage of people who correctly identified that each permission would be given to the requesting site after they clicked okay. Table~\ref{table:writestats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified a permission as being requested to Null Hypothesis~\ref{hyp:write_equals_random}, that user's understanding would be equivalent to random guessing.
 
-\begin{figure}[tbh!]
+\begin{figure}[tb!]
   \centering
   \includegraphics[width=8.5cm]{write_percents_cosn}
   \caption{Percentage of people who correctly identified that each permission would be given to the site upon authorization.}
   \label{figure:writepercents}
 \end{figure}
 
-\begin{table}[tbh!]
+\begin{table}[tb!]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -550,7 +550,9 @@ Respondents are equally likely to indicate that data can be read regardless of i
 
 %The results of our survey comparing read and write permissions (Section~\ref{sec:comparisonsurvey}) indicated that read permissions are understood decently well. However, the additional survey testing whether people understand that they are giving permission to view things that are not marked as ``public'' (see Section~\ref{sec:privacysurvey}) suggests that they do not understand this aspect.
 
-Figure~\ref{figure:privacypercents} illustrates the percentage of people who correctly identified that Imgur.com would be able to see their photo albums with various privacy settings if they clicked okay. Table~\ref{table:privacystats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified that a privacy level was visible compared to Null Hypothesis~\ref{hyp:privacy_setting} of random guessing: half of the total number of people who were given the survey.
+Figure~\ref{figure:privacypercents} illustrates the percentage of people who correctly identified that Imgur.com would be able to see their photo albums with various privacy settings if they clicked okay.
+%Table~\ref{table:privacystats} lists the numerical percentages as well as the 2-tailed \emph{p}-value from a binomial test comparing the number of people who correctly identified that a privacy level was visible compared to Null Hypothesis~\ref{hyp:privacy_setting} of random guessing: half of the total number of people who were given the survey.
+It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
 
 \begin{figure}[tb!]
   \centering
@@ -559,7 +561,8 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
   \label{figure:privacypercents}
 \end{figure}
 
-\begin{table}[tbh!]
+\begin{comment}
+\begin{table}[tb!]
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
@@ -572,7 +575,24 @@ Figure~\ref{figure:privacypercents} illustrates the percentage of people who cor
   \label{table:privacystats}
 \end{table}
 
-For each privacy setting tested, Null Hypothesis~\ref{hyp:privacy_setting}, that respondents are equally likely to indicate that data can be read regardless of its privacy setting, can be rejected with a $G$-test $p < .001$ and a $G$-test statistic of 88.34. It appears people are generally aware that they are giving access to their photo albums that are marked as public. However, they are generally unaware that they are also giving access to their photo albums that are marked as visible to their friends or only to themselves. 
+\begin{table}[tb!]
+  \centering
+  \begin{tabular}{|l|l}
+    \hline
+    \textbf{Privacy Setting}              & \textbf{Percent Correct} \\ \hline \hline
+    those marked as visible to the public & 83.84   \\ \hline
+    \begin{tabular}[c]{@{}l@{}}those marked as visible \\to friends\end{tabular}    & 33.33            \\ \hline
+    \begin{tabular}[c]{@{}l@{}}those marked as visible \\to only me\end{tabular}    & 22.22      \\ \hline
+  \end{tabular}
+  \caption{\emph{p}-values for 2-tailed binomial test comparing the number of people who correctly selected each privacy level to Null Hypothesis~\ref{hyp:privacy_setting} FIXME. $N$ = 99.} 
+  \label{table:privacystats}
+\end{table}
+\end{comment}
+
+Using a $G$-test with three degrees of freedom to compare all three test conditions, Null Hypothesis~\ref{hyp:privacy_setting}, that respondents are equally likely to indicate that data can be read regardless of its privacy setting, can be rejected with $p < .001$ based on a $G$-test statistic of 86.31.
+Comparing each pair of conditions in turn using a $G$-test with two degrees of freedom, we can conclude with $p < .001$ that participants were significantly more likely to believe photos marked ``visible to the public'' could be read than either photos marked ``visible to friends'' or ``visible to only me''.
+However, we cannot conclude with high confidence ($p \approx .12$) that participants were significantly more likely to believe photos marked ``visible to friends'' could be read than photos marked ``visible to only me''.
+Thus we can reject Null Hypothesis~\ref{hyp:privacy_setting} in general and conclude that users do believe privacy settings impact visibility of data to third-party sites, we cannot conclude if the specific privacy settings (visible to friends or only to the user) had a significant impact on user understanding.
 
 Although our first set of surveys and Egelman's study \cite{egelman} indicated that read permissions are understood decently well, this study suggests that these results may not actually be entirely representative of user understanding: although people know which types of information they are granting access to, most do not realize they are giving access to that information even if they have marked it with a privacy level other than public.
 %However, this section of our study was performed on a relatively small scale (one website with one permission and 100 responses). A future study could test this comprehensively.
@@ -657,15 +677,15 @@ In this case, it may be that Facebook has decided that its more important to cle
     OpenShuffle.com    & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including your high\\ scores and more.\end{tabular}                               \\ \hline
     Fupa.com           & \begin{tabular}[c]{@{}l@{}}This app may post on your\\ behalf, including games you\\ played and more.\end{tabular}                               \\ \hline
   \end{tabular}
-  \caption{Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission they request is \emph{publish\_actions}.} 
+  \caption{Write permissions messages from sites using an older version of Facebook Connect. All sites are gaming sites. The only write permission requested is \emph{publish\_actions}.} 
   \label{table:oldmessages}
 \end{table}
 
 \subsection{Ineffectiveness of user choice}
 
-It is possible that write messages in particular are vague because users are unable to effectively understand them at all (or simply do not pay attention to them~\cite{egelman}), so Facebook has decided it is better off protecting user privacy by policing developers instead of providing users with effective choice and control.
+It is possible that write messages are vague because users are unable to completely understand them (or simply do not pay attention to them~\cite{egelman}), so Facebook has decided it is better off protecting user privacy by policing developers.
 
-Facebook has publicly attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions~\cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' It says Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user's behalf must be expected by the user and consistent with the user's actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy~\cite{fbpolicy}. 
+Facebook has publicly attempted to address how general write permissions are by placing responsibility on the developer. The aforementioned Facebook blog post explaining the \emph{publish\_stream} and \emph{publish\_actions} permissions~\cite{publishperms} states that since anything can be shared, ``it will continue to be the developer's responsibility to make it clear to the user what content will be shared back to Facebook.'' Facebook's policy was updated to read: ``If a user grants [the developer] a publishing permission, actions [the developer takes] on the user's behalf must be expected by the user and consistent with the user's actions within [the] app.'' This is especially important since our survey showed that users' interpretation of the write permissions message is influenced by the identity of the site even though there is no difference in the permissions being granted. As of the time of this writing, however, this is no longer mentioned in the Facebook policy~\cite{fbpolicy}. 
 
 
 %\section{Comparison to other SSO implementations}
@@ -684,7 +704,8 @@ This research could be extended in a number of directions.
   \item The results of our survey testing whether users understand that sites are getting access to their information even if it is marked as private (see Figure~\ref{figure:privacypercents}) indicate that there is room for more research in the area. This should be tested with a variety of different permissions. One could also experiment with ways to make it clear to the user that all of their information is being shared, regardless of the privacy settings.
   \item We previously mentioned that our survey included options of things the sites could not actually do so the respondent would not have to select all options to be correct. However, many people selected these fake options. One could research what permissions users think are being requested beyond what is actually being requested. This is an important area of research because people may be unwilling to use the SSO service if they think too many permissions are being given.
   \item It is clear that users do not understand the full range of write permissions being requested. However, Egelman \cite{egelman} determined that users make their decision to use Facebook Connect or not before they see the permissions requested. Egelman only tested read permissions, though. A similar study could see how the presence of write permissions affects users' decisions to use Facebook Connect. 
-  \item We observed that users understand the granular read permissions better than the single write permission. One could test whether granular write permissions are in fact more clear to users than the current system. We did not test this because the success of the study would depend on the researcher's ability to make up plausible granular write permissions.
+  \item We observed that users understand the granular read permissions better than the single write permission. One could test whether granular write permissions are in fact more clear to users than the current system. 
+%We did not test this because the success of the study would depend on the researcher's ability to make up plausible granular write permissions.
 %  which write permissions are being requested and varying the number of write permissions requested affects whether users are willing to use the system.
 \end{itemize}
 
@@ -702,11 +723,11 @@ Our study differs from previous studies by determining what specific permissions
 
 \section{Concluding Remarks}
 
-To maximize security and to ensure users feel comfortable using Facebook Connect, developers should be allowed to minimize the number of permissions they request from the user and the permissions should be presented to the user as clearly as possible. On both fronts, Facebook Connect could be improved.
+To maximize security and to ensure users feel comfortable using Facebook Connect, developers should minimize the number of permissions they request and the permissions should be presented to the user as clearly as possible. On both fronts, Facebook Connect could be improved.
 
 When a developer designs their site to request certain permissions through Facebook Connect, the Facebook Connect system may translate certain permissions into broader groups of permissions that will all be granted if the user authorizes the site to access their profile. This may force users to give unnecessary permissions to a site in order to log in. 
 
-The messages presented to the user for read permissions are reasonably clear---our survey showed that a majority of users understand what data they are providing access to. However, they may be unaware that they are providing access to this information even if their privacy settings are set to private.
+The messages presented to the user for read permissions are reasonably clear---our survey showed that a majority of users understand what data they are providing access to. However, many users are unaware that they are providing access even if this information is marked as private.
 
 Write permissions, however, are much less clear. Facebook has simplified the write permissions process so that every site either gets all write permissions or none. Our survey shows that users do not understand the many things a site will be able to do to their profile if they authorize the vague message stating that the site ``would like to post to Facebook for you.'' In addition, users' interpretations of this message vary depending on the identity of the site they are logging in to although this actually has no impact on the permissions granted. Given the relative success with which users were able to identify the more distinct and well-defined read permissions, it appears users might actually understand write permissions better if they were split up.
 
@@ -714,9 +735,7 @@ On April 30, 2014 Facebook announced an update to their Facebook Login system to
 
 \section{Acknowledgments}
 
-Thanks to Arvind Narayanan for introducing us and starting us on this research path. Thanks to Steven Englehardt, Dillon Reisman, Pete Zimmerman, and Christian Eubank for setting us up with the CITP's web crawling infrastructure. We would also like to acknowledge Steven for discovering the permissions in the hidden HTML input elements. Thanks to Markus Huber for providing us with the AppInspect dataset \cite{appinspect}.
-
-\clearpage
+Thanks to Arvind Narayanan for starting us on this research path. Thanks to Steven Englehardt, Dillon Reisman, Pete Zimmerman, and Christian Eubank for setting us up with the CITP's web crawling infrastructure. Steven originally discovering permissions in the hidden HTML input elements. Thanks to Markus Huber for providing us with the AppInspect dataset \cite{appinspect}.
 
 \bibliographystyle{abbrv}
 \bibliography{report_references}
