@@ -2,7 +2,7 @@
 
 \usepackage[
 hidelinks,
-pdftitle={Cognitive disconnect: Understanding Facebook Connect login permissions},
+pdftitle={Cognitive Disconnect: Understanding Facebook Connect Login Permissions},
 pdfauthor={Nicky Robinson and Joseph Bonneau}
 ]{hyperref}
 \usepackage[usenames,dvipsnames]{xcolor}
@@ -14,11 +14,22 @@ pdfauthor={Nicky Robinson and Joseph Bonneau}
 \usepackage{placeins}
 \usepackage{verbatim}
 
+\setlength{\paperheight}{11in}
+\setlength{\paperwidth}{8.5in}
+\usepackage[
+  pass,% keep layout unchanged 
+  % showframe,% show the layout
+]{geometry}
+
 \let\proof\relax
 \let\endproof\relax
 \usepackage{amsthm}
 
 \newtheorem{hypothesis}{Null Hypothesis}
+
+%\newcommand{\extendedversion}[2]{#1}
+\newcommand{\extendedversion}[2]{#2}
+
 
 % copyright notice
 \newfont{\mycrnotice}{ptmr8t at 7pt}
@@ -41,7 +52,7 @@ http://dx.doi.org/10.1145/2660460.2660471}
 
 \definecolor{darkred}{HTML}{E50000}
 
-\title{Cognitive disconnect:\\ Understanding Facebook Connect login permissions}
+\title{Cognitive Disconnect:\\ Understanding Facebook Connect Login Permissions}
 
 \numberofauthors{2} 
 \author{
@@ -75,8 +86,8 @@ Our results suggest that users understand detailed, granular messages better tha
 \end{abstract}
 
 \category{D.4.6}{Security and Protection}{Access Controls}
-\terms{Security, Human Factors}
-\keywords{Online social networks, permissions, privacy, Facebook}
+\terms{Security; Human Factors}
+\keywords{Online social networks; permissions; privacy; Facebook}
 
 \section{Introduction}
 Single Sign-On (SSO) systems allow users to log in to websites (called \textit{relying sites} or \textit{relying parties}) using their username and password from a third-party \textit{identity provider}.
@@ -318,7 +329,7 @@ However, all eight write permissions are in a single group, effectively making w
     \multirow{2}{*}{manage your events}                                                                                                                                                                                                                              & create\_event       & create and modify events                                                                                                                  \\ \cline{2-3} 
     & rsvp\_event         & RSVP to events                                                                                                                            \\ \hline
   \end{tabular}
-  \caption{Message decoder for permissions that are granted in groups. Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}. Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
+  \caption{Message decoder for permissions that are granted in groups. \extendedversion{Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}.}{} Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagegrouped}
 \end{table*}
 \subsection{How permissions are presented to the user} 
@@ -327,7 +338,7 @@ However, all eight write permissions are in a single group, effectively making w
 As mentioned previously, when the user logs in to a site with Facebook Connect for the first time they are presented with up to three messages from Facebook asking them to approve the read, write, and/or extended permissions.
 We reverse-engineered the algorithm for generating the phrase or word in the displayed permissions message that corresponds to each granted permission using our test site and verified that it matched the data observed in our crawl.
 Most messages appear reasonably clear.
-However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.
+However, the grouped permissions (see Table~\ref{table:permgroups}) are displayed with just one corresponding word or phrase indicating that \emph{all} the permissions in that group are being requested. Table~\ref{table:messagegrouped} presents these potentially unclear messages and their meaning according to the Facebook Connect documentation \cite{fbpermissions}. \extendedversion{Similar tables for all permissions can be found in Appendix~\ref{appendix:decodetables}.}{}
 
 
 \subsection{Facebook's response}
@@ -373,7 +384,7 @@ Respondents were then presented with one of the following three question types:
 The free response question has the advantage of not prompting the user with any ideas that may not have occurred to them otherwise. However, pilots showed that answers to free response questions were frequently too vague to be useful and that respondents may not have put enough thought into their answers. While this may reflect how users pay little attention to permissions messages in real life when they log in to sites, it is not useful for this survey.
 There was no noticeable difference in responses between the yes/no questions and the multiple-selection questions, so we chose the latter to get results about more permissions.
 
-We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. To keep our independent variables separate, we conducted two different surveys. The first survey (Section~\ref{sec:comparisonsurvey}) used the site name ``Hooli.com'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}). The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}. Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
+We also experimented with showing the respondent messages from different sites. There was some indication that the site influenced the responses. For example, people appeared more likely to think photo-oriented sites like Flickr would be able to do photo-oriented things, such as uploading photos. To keep our independent variables separate, we conducted two different surveys. The first survey (Section~\ref{sec:comparisonsurvey}) used the site name ``Hooli.com'' (Hooli is a fake tech company in HBO's \emph{Silicon Valley}). The description of the site given to users was a description of a real site, \emph{Splashscore.com}. This was one of the sites piloted and we determined it had an appropriately general-sounding description and could conceivably need a wide variety of permissions. \extendedversion{The way the site was presented to users can be seen in Appendix~\ref{appendix:surveys}.}{} Our second survey (Section~\ref{sec:multisite}) was designed to test write permission comprehension across different sites.
 
 \subsection{Read vs.\ write permissions}
 \label{sec:comparisonsurvey}
@@ -395,9 +406,9 @@ Respondents' ability to identify which read permissions they are authorizing is 
  % \item Respondents' ability to identify which read permissions they are authorizing is no different than their ability to identify which write permissions they are authorizing.
 %\end{enumerate}
 
-This survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey and were excluded from analysis, but were still paid for their participation.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders and can be seen in Appendix~\ref{appendix:writesurveys}. 
+This survey was taken by 600 Mechanical Turk workers. All were first asked if they had seen a site use Facebook login before---nearly all had. Half of those who had\footnote{Respondents who had not seen a Facebook Connect login were not given the rest of the survey and were excluded from analysis, but were still paid for their participation.} were presented with Facebook's standard write permissions message followed by 13 options of things they might be giving the site permission to do by clicking okay. Eight of the 13 were taken almost directly from the Facebook Connect documentation's permission descriptions \cite{fbpermissions}, so they were all things the site would be able to do (since Facebook gives all write permissions together). The other five were things the site could not do. They were present not to be tested but to eliminate biases due to an aversion to selecting all available options. The 13 options were presented in 4 different orders\extendedversion{ and can be seen in Appendix~\ref{appendix:writesurveys}.}{.}
 
-The other half were presented with read permissions questions. Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}). All were renamed ``Hooli.com.'' Each message was followed with eight or nine options for things the site might be able to do. Four or five options were information on a Facebook profile that the site would be able to see. The other four were either things the site could not see or were write or extended permissions.\footnote{It is difficult to determine what the site cannot see since the user's public profile could contain a lot of information if they have relaxed privacy settings, so only very clear-cut things like seeing private messages could be used.} Again, the incorrect answers were only so the respondent did not have to select all options to be correct. The four different questions can be seen in Appendix~\ref{appendix:readsurveys}. There are too many different read permissions to effectively test them all without exhausting the respondents with too many questions, so the ones tested are some of the more common ones.
+The other half were presented with read permissions questions. Since read permissions messages vary, we used messages taken from four different real sites with varying numbers of permissions (\emph{Jabong.com}, \emph{Flickr.com}, \emph{Splashscore.com}, and \emph{TripAdvisor.com}). All were renamed ``Hooli.com.'' Each message was followed with eight or nine options for things the site might be able to do. Four or five options were information on a Facebook profile that the site would be able to see. The other four were either things the site could not see or were write or extended permissions.\footnote{It is difficult to determine what the site cannot see since the user's public profile could contain a lot of information if they have relaxed privacy settings, so only very clear-cut things like seeing private messages could be used.} Again, the incorrect answers were only so the respondent did not have to select all options to be correct. \extendedversion{The four different questions can be seen in Appendix~\ref{appendix:readsurveys}.}{} There are too many different read permissions to effectively test them all without exhausting the respondents with too many questions, so the ones tested are some of the more common ones.
 
 \subsubsection{Read permissions results}
 
@@ -538,7 +549,7 @@ Null Hypothesis~\ref{hyp:site_identity} can be rejected for ``update your status
 
 In one pilot survey of the free response format, a respondent stated that the site would gain access to only a limited number of permissions because their Facebook settings prevented them from accessing the rest. This suggests a lack of understanding of how the read permissions work: A site can access nearly everything that is public with only the \emph{public\_profile} permission \cite{fbprivacyfaq}. By granting the site additional permissions, a user is giving the site permission to access that information regardless of the user's privacy settings. Using the test site, we confirmed that we could see all user photo albums regardless of their privacy settings with the \emph{user\_photos} permission.
 
-We surveyed 100 additional Mechanical Turk respondents to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them (the correct answer is all three). The survey can be seen in Appendix~\ref{appendix:readsurvey2}.
+We surveyed 100 additional Mechanical Turk respondents to see if this confusion was widespread. The survey presented the user with the permission message for \emph{Imgur.com}, which requests the \emph{user\_photos} permission. Users were asked to identify which photo albums Imgur would be able to see if they clicked okay. The options were those marked as visible to the public, those marked as visible to friends, and those marked as visible to only them (the correct answer is all three). \extendedversion{The survey can be seen in Appendix~\ref{appendix:readsurvey2}.}{}
 
 Our null hypothesis in this experiment is:
 
@@ -740,6 +751,7 @@ Thanks to Arvind Narayanan for starting us on this research path. Thanks to Stev
 \bibliographystyle{abbrv}
 \bibliography{report_references}
 
+\extendedversion{
 \appendix
 \section{Full message decoding tables}
 \label{appendix:decodetables}
@@ -936,7 +948,10 @@ Figure~\ref{figure:71r} shows the survey to test whether users understand that t
 \end{figure}
 
 \FloatBarrier
-
+}{
+\clearpage
+\appendix
+}
 \section{Correspondence with Facebook Security}
 \label{appendix:correspondence}
 
