@@ -36,6 +36,7 @@ pdfauthor={Nicky Robinson and Joseph Bonneau}
 \newfont{\myconfname}{ptmri8t at 7pt}
 \let\crnotice\mycrnotice%
 \let\confname\myconfname%
+
 \permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.}
 \conferenceinfo{COSN'14,}{October 1--2, 2014, Dublin, Ireland.}
 \copyrightetc{Copyright 2014 ACM \the\acmcopyr}
@@ -44,11 +45,8 @@ http://dx.doi.org/10.1145/2660460.2660471}
 \clubpenalty=10000
 \widowpenalty = 10000
 
-\begin{document}\sloppy
 
-%replace XXX with the submission number you are given from the ISCA submission site.
-\conferenceinfo{COSN}{2014 Dublin, Ireland}
-\CopyrightYear{2014} % Allows default copyright year (20XX) to be over-ridden - IF NEED BE.
+\begin{document}\sloppy
 
 \definecolor{darkred}{HTML}{E50000}
 
@@ -303,7 +301,7 @@ However, all eight write permissions are in a single group, effectively making w
   \centering
   \begin{tabular}{|l|l|l|}
     \hline
-    \multicolumn{3}{|l|}{\textbf{Read Permissions:} \textit{Site\_Name will receive the following info…}}                                                                                                                                                                                                                                                                                                                                                   \\ \hline \hline
+    \multicolumn{3}{|l|}{\textbf{Read Permissions:} \textit{Site\_Name will receive the following info\dots}}                                                                                                                                                                                                                                                                                                                                                   \\ \hline \hline
     \textbf{Message}                                                                                                                                                                                                                                                 & \textbf{Permission} & \textbf{Meaning} \cite{fbpermissions}                                                                                                                          \\ \hline
     \multirow{2}{*}{email address}                                                                                                                                                                                                                                   & email               & email                                                                                                                                     \\ \cline{2-3} 
     & contact\_email      & not listed                                                                                                                                \\ \hline
@@ -311,10 +309,10 @@ However, all eight write permissions are in a single group, effectively making w
     & export\_stream       & \begin{tabular}[l]{@{}l@{}}export my posts and make them \\ public. All posts will be exported, \\ including status updates.\end{tabular} \\ \hline
     \multirow{2}{*}{personal description}                                                                                                                                                                                                                            & user\_about\_me     & about me                                                                                                                                  \\ \cline{2-3} 
     & user\_activities    & activities                                                                                                                                \\ \hline \hline
-    \multicolumn{3}{|l|}{\textit{...and your friends'…}}                                                                                                                                                                                                                                                                                                                                                                               \\ \hline \hline
+    \multicolumn{3}{|l|}{\textit{...and your friends'\dots}}                                                                                                                                                                                                                                                                                                                                                                               \\ \hline \hline
     \multirow{2}{*}{personal descriptions}                                                                                                                                                                                                                           & friends\_about\_me  & `about me' details                                                                                                                         \\ \cline{2-3} 
     & friends\_activities & activities                                                                                                                                \\ \hline \hline
-    \multicolumn{3}{|l|}{\textbf{Write Permissions:} \textit{Site\_Name would like to…}}                                                                                                                                                                                                                                                                                                                                                                    \\ \hline \hline
+    \multicolumn{3}{|l|}{\textbf{Write Permissions:} \textit{Site\_Name would like to\dots}}                                                                                                                                                                                                                                                                                                                                                                    \\ \hline \hline
     \textbf{Message}                                                                                                                                                                                                                                                 & \textbf{Permission} & \textbf{Meaning}                                                                                                                          \\ \hline
     \multirow{8}{*}{\begin{tabular}[l]{@{}l@{}}post to Facebook for you.\\ \textit{-- or{\footnotesize *} --}\\ post publicly to Facebook for you.\\ \textit{-- or{\footnotesize *} --}\\ post privately to Facebook for you.\end{tabular}} & create\_note        & create and modify events                                                                                                                  \\ \cline{2-3} 
     & photo\_upload       & add or modify photos                                                                                                                      \\ \cline{2-3} 
@@ -324,7 +322,7 @@ However, all eight write permissions are in a single group, effectively making w
     & share\_item         & share items on my behalf                                                                                                                  \\ \cline{2-3} 
     & status\_update      & update my status                                                                                                                          \\ \cline{2-3} 
     & video\_upload       & add or modify videos                                                                                                                      \\ \hline \hline
-    \multicolumn{3}{|l|}{\textbf{Extended Permissions:} \textit{Site\_Name would like to…}}                                                                                                                                                                                                                                                                                                                                                                 \\ \hline \hline
+    \multicolumn{3}{|l|}{\textbf{Extended Permissions:} \textit{Site\_Name would like to\dots}}                                                                                                                                                                                                                                                                                                                                                                 \\ \hline \hline
     \textbf{Message}                                                                                                                                                                                                                                                 & \textbf{Permission} & \textbf{Meaning}                                                                                                                          \\ \hline
     \multirow{2}{*}{manage your events}                                                                                                                                                                                                                              & create\_event       & create and modify events                                                                                                                  \\ \cline{2-3} 
     & rsvp\_event         & RSVP to events                                                                                                                            \\ \hline
@@ -347,7 +345,7 @@ However, the grouped permissions (see Table~\ref{table:permgroups}) are displaye
 We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{Our full correspondence with Facebook is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
 This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand.%, which we turn to in the next section.
 
-
+\extendedversion{}{\clearpage}
 \section{User understanding}
 \label{sec:understanding}
 
@@ -796,7 +794,7 @@ Thanks to Arvind Narayanan for starting us on this research path. Thanks to Stev
     website                               & user\_website               & website                                                                                     \\ \hline
     work history                          & user\_work\_history         & work history                                                                                \\ \hline
   \end{tabular}
-  \caption{\label{first}Read permission message decoder, part (a). Message begins with \textit{``Site\_Name will receive the following info…''} See Figure~\ref{figure:messageexample} (left image) for an example.}
+  \caption{\label{first}Read permission message decoder, part (a). Message begins with \textit{``Site\_Name will receive the following info\dots''} See Figure~\ref{figure:messageexample} (left image) for an example.}
   \label{table:messagesr1}
 \end{table*}
 
@@ -829,7 +827,7 @@ Thanks to Arvind Narayanan for starting us on this research path. Thanks to Stev
           websites                               & friends\_website               & websites                                                                               \\ \hline
           work histories                         & friends\_work\_history         & work history                                                                           \\ \hline
   \end{tabular}
-  \caption{\label{second} Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit{``...and your friends'…''} See Figure~\ref{figure:messageexample} (left image) for an example.}
+  \caption{\label{second} Read permission message decoder, part (b). After listing the permissions that apply to the user, the permissions applying to their friends are listed. This part of the message begins with \textit{``...and your friends'\dots''} See Figure~\ref{figure:messageexample} (left image) for an example.}
   \label{table:messagesr2}
 \end{table*}
 
@@ -871,7 +869,7 @@ Thanks to Arvind Narayanan for starting us on this research path. Thanks to Stev
                   send you text messages                                                                & sms                   & send SMS messages to my phone                                                                    \\ \hline
 
   \end{tabular}
-  \caption{Extended permission message decoder. Message begins with \textit{``Site\_Name would like to…''} See Figure~\ref{figure:messageexample} (right image) for an example.}
+  \caption{Extended permission message decoder. Message begins with \textit{``Site\_Name would like to\dots''} See Figure~\ref{figure:messageexample} (right image) for an example.}
   \label{table:messagese}
 \end{table*}
 
