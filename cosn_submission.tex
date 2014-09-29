@@ -157,7 +157,7 @@ Combining these two lists gave us a total of 203 sites to study.
 %, about half which receive heavy traffic (those from the Alexa Top 500) and about half of which do not (those from the AppInspect database).
 %This list provides a diverse sampling of the websites people log in to with Facebook Connect.
 
-For crawling we used OpenWPM,\footnote{\url{https://github.com/citp/OpenWPM/wiki}} a Selenium-based\footnote{\url{https://github.com/cmwslw/selenium-crawler}} web crawler being developed by the Princeton Center for Information Technology Policy (CITP). 
+For crawling we used OpenWPM~\cite{openwpm} a Selenium-based\footnote{\url{https://github.com/cmwslw/selenium-crawler}} web crawler being developed by the Princeton Center for Information Technology Policy (CITP). 
 We performed automated logins to all 203 sites and recorded the requested, granted, and displayed permissions.
 % they request and the corresponding messages presented to the users. (The way the permissions they request was determined will be discussed in Section~\ref{sec:inputels}.)
 26 of the 203 sites used an older version of Facebook Connect; we will focus only on the 177 using the current version.
@@ -330,6 +330,8 @@ However, all eight write permissions are in a single group, effectively making w
   \caption{Message decoder for permissions that are granted in groups. \extendedversion{Decoder tables for all permissions are in Appendix~\ref{appendix:decodetables}.}{} Italic text represents how the permissions are introduced when presented to the user. See Figure~\ref{figure:messageexample} for an example. \\ \footnotesize *Which of the three messages is presented depends on to whom the posts will be visible. This is controlled by the menu in the bottom left of the middle image in Figure~\ref{figure:messageexample}.}
   \label{table:messagegrouped}
 \end{table*}
+
+\vspace{1cm}
 \subsection{How permissions are presented to the user} 
 \label{sec:messages} 
 
@@ -344,6 +346,7 @@ However, the grouped permissions (see Table~\ref{table:permgroups}) are displaye
 
 We sent a security bug report to Facebook stating that we could use the \emph{publish\_actions} permission after requesting any other write permission. Facebook Security stated\footnote{Our full correspondence with Facebook is in Appendix~\ref{appendix:correspondence}.} that ``this behavior is by design'' and confirmed that when one permission is requested in the scope, they ``translate them to a broader set of [permissions] which are easier for users to understand'' \cite{fbsecurity}. When asked why this was done for write permissions but not read permissions, they responded that they ``made this change to simplify the experience for developers and for users'' and that ``write permissions are more similar...whereas read permissions are more distinct.'' 
 This motivated us to evaluate whether all-or-nothing write permissions are in fact easier for the user to understand.%, which we turn to in the next section.
+
 
 \extendedversion{}{\vspace{1cm}}
 \section{User understanding}
